@@ -17,12 +17,11 @@ const app = (0, express_1.default)();
 //parsers
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)({ origin: ['https://universe-hub.vercel.app/'], credentials: true }));
+app.use((0, cors_1.default)({ origin: ["https://universe-hub.vercel.app/"], credentials: true }));
 // application routes
-app.use('/api/v1', routes_1.default);
-/;
-app.get('/', (req, res) => {
-    res.send('server run 24x7');
+app.use("/api", routes_1.default);
+app.get("/", (req, res) => {
+    res.send("server run 24x7");
 });
 app.use(globalErrorhandler_1.default); // This is connected with the globalErrorhandler.ts file at the middleware folder.
 //Not Found

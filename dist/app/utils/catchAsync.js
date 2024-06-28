@@ -1,10 +1,20 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-// Todo without further modification you can use the code. If you want to customize the error message then you can do so. If you use it you can avoid the use of try catch block. So your code will be more cleaner. You can read this blog to understand the code https://dev.to/md_enayeturrahman_2560e3/simplifying-error-handling-in-express-controllers-introducing-catchasync-utility-function-2f3l
-// If you want to see its use check the validateRequest.ts file inside the middleware folder.
-const catchAsync = (fn) => {
-    return (req, res, next) => {
-        Promise.resolve(fn(req, res, next)).catch((err) => next(err));
-    };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+const catchAsync = (fn) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield fn(req, res, next);
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.default = catchAsync;

@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const app_1 = __importDefault(require("./app"));
 const config_1 = __importDefault(require("./config"));
-// Todo if you want understand the code read my following two blogs https://dev.to/md_enayeturrahman_2560e3/how-to-handle-errors-in-an-industry-grade-nodejs-application-217b https://dev.to/md_enayeturrahman_2560e3/how-to-set-up-eslint-and-prettier-1nk6 
+// Todo if you want understand the code read my following two blogs https://dev.to/md_enayeturrahman_2560e3/how-to-handle-errors-in-an-industry-grade-nodejs-application-217b https://dev.to/md_enayeturrahman_2560e3/how-to-set-up-eslint-and-prettier-1nk6
 let server;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -31,7 +31,7 @@ function main() {
     });
 }
 main();
-process.on('unhandledRejection', (err) => {
+process.on("unhandledRejection", (err) => {
     console.log(`😈 unahandledRejection is detected , shutting down ...`, err);
     if (server) {
         server.close(() => {
@@ -40,7 +40,7 @@ process.on('unhandledRejection', (err) => {
     }
     process.exit(1);
 });
-process.on('uncaughtException', () => {
+process.on("uncaughtException", () => {
     console.log(`😈 uncaughtException is detected , shutting down ...`);
     process.exit(1);
 });

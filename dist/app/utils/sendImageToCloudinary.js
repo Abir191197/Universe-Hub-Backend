@@ -27,7 +27,7 @@ const sendImageToCloudinary = (imageName, path) => {
                     console.log(err);
                 }
                 else {
-                    console.log('File is deleted.');
+                    console.log("File is deleted.");
                 }
             });
         });
@@ -36,11 +36,11 @@ const sendImageToCloudinary = (imageName, path) => {
 exports.sendImageToCloudinary = sendImageToCloudinary;
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, process.cwd() + '/uploads/');
+        cb(null, process.cwd() + "/uploads/");
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, file.fieldname + '-' + uniqueSuffix);
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(null, file.fieldname + "-" + uniqueSuffix);
     },
 });
 exports.upload = (0, multer_1.default)({ storage: storage });
