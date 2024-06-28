@@ -4,9 +4,15 @@ import sendResponse from "../../utils/sendResponse";
 import { Request, Response } from "express";
 import { AuthServices } from "./auth.service";
 
+
+
+
+
+
 // SignIn function
 const Signup = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthServices.signUpUserIntoDB(req.body);
+    const result = await AuthServices.signUpUserIntoDB(req.body);
+    
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -15,6 +21,7 @@ const Signup = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 
 
 export const AuthControllers = {

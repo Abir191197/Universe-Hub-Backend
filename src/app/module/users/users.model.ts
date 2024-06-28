@@ -3,6 +3,11 @@ import { TUser } from "./users.interface";
 
 const UserSchema = new Schema<TUser>(
   {
+    id: {
+      type: Number,
+      required: true,
+      default: 1000,
+    },
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
@@ -12,10 +17,13 @@ const UserSchema = new Schema<TUser>(
       type: String,
       required: true,
       default: "student",
-    }, // Default role is "student"
+    },
+
+    // Default role is "student"
   },
-  { timestamps: true },
+  { timestamps: true }
 );
+
 
 const UserModel = mongoose.model<TUser>("Users", UserSchema, "Users");
 
