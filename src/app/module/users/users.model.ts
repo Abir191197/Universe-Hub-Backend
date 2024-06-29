@@ -21,9 +21,8 @@ const UserSchema = new Schema<TUser>(
 
     // Default role is "student"
   },
-  { timestamps: true }
+  { timestamps: true },
 );
-
 
 const UserModel = mongoose.model<TUser>("Users", UserSchema, "Users");
 
