@@ -10,7 +10,7 @@ import jwt,{ JwtPayload } from "jsonwebtoken";
 
 //signUp user or create user
 
-export const signUpUserIntoDB = async (payload: TUser) => {
+ const signUpUserIntoDB = async (payload: TUser) => {
   try {
     const lastUserId = await findLastCreatedUser();
     let newUserId = 1000;
