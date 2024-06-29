@@ -18,10 +18,18 @@ const UserSchema = new Schema<TUser>(
       required: true,
       default: "student",
     },
-
-    // Default role is "student"
+    status: {
+      type: String,
+      required: true,
+      default: "Active",
+    },
+    isDeleted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const UserModel = mongoose.model<TUser>("Users", UserSchema, "Users");

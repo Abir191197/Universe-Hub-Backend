@@ -4,6 +4,11 @@ import { findLastCreatedUser } from "../users/user.utils";
 import { TUser } from "../users/users.interface";
 import UserModel from "../users/users.model";
 import config from "../../../config";
+import { TLoginUser } from "./auth.interface";
+import httpStatus from "http-status";
+import jwt,{ JwtPayload } from "jsonwebtoken";
+
+//signUp user or create user
 
 export const signUpUserIntoDB = async (payload: TUser) => {
   try {
@@ -28,6 +33,63 @@ export const signUpUserIntoDB = async (payload: TUser) => {
   }
 };
 
+
+//login user in site
+
+const loginUserFromDB = async (payload: TLoginUser) => {
+  // Checking if the user exists
+  const user = await UserModel.findOne({ email: payload?.email });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "This user is not found!");
+  }
+
+  if (user.status === "ban") {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "This user is Ban contact to support"
+    );
+  }
+  if (user.isDeleted === true) {
+    throw new AppError(httpStatus.GONE, "This Account is Deleted");
+  }
+
+  // Compare the plain password with the hashed password
+  const isMatch = await bcrypt.compare(payload?.password, user.password);
+
+  if (!isMatch) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "Invalid password");
+  }
+
+  // Creating a JWT token upon successful login
+  const jwtPayload: JwtPayload = {
+    name:user.name,
+    email: user.email,
+    role: user.role,
+  };
+
+   const accessToken = jwt.sign(
+     jwtPayload,
+     config.access_key as string,
+     {
+       expiresIn: "12h",
+     }
+   );
+
+
+  return { user, accessToken }
+
+
+} 
+
+
+
+
+
+
+
+
 export const AuthServices = {
   signUpUserIntoDB,
+  loginUserFromDB,
 };

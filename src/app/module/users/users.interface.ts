@@ -8,6 +8,8 @@ export interface TUser {
   phone: string;
   address: string;
   role: "admin" | "counsellor" | "student";
+  status: string;
+  isDeleted: boolean;
 }
 
 export type TUserRole = keyof typeof USER_ROLE;

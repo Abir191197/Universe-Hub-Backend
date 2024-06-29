@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+
 dotenv.config();
 
 export default {
@@ -9,4 +10,6 @@ export default {
   cloudinary_api_key: process.env.cloudinary_api_key,
   cloudinary_api_secret: process.env.cloudinary_api_secret,
   bcrypt_salt_rounds: process.env.bcrypt_salt_rounds,
+  access_key: process.env.access_secret,
+  refresh_key: process.env.refresh_secret,
 };
