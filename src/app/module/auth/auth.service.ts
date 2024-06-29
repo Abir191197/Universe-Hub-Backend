@@ -63,32 +63,46 @@ const loginUserFromDB = async (payload: TLoginUser) => {
 
   // Creating a JWT token upon successful login
   const jwtPayload: JwtPayload = {
-    name:user.name,
+    name: user.name,
     email: user.email,
     role: user.role,
   };
 
-   const accessToken = jwt.sign(
-     jwtPayload,
-     config.access_key as string,
-     {
-       expiresIn: "12h",
-     }
-   );
-  
-  const refreshToken = jwt.sign(
-    jwtPayload,
-    config.refresh_key as string,
-    {
-      expiresIn: "30d",
-    }
-  );
+  const accessToken = jwt.sign(jwtPayload, config.access_key as string, {
+    expiresIn: "12h",
+  });
 
+  const refreshToken = jwt.sign(jwtPayload, config.refresh_key as string, {
+    expiresIn: "30d",
+  });
 
   return { user, accessToken, refreshToken };
 
 
 } 
+
+
+// RefreshToken function
+  
+
+const refreshTokenGen = async (token: string) => {
+  const decoded = jwt.verify(token, config.access_key as string) as JwtPayload;
+  const { email, role } = decoded;
+
+  const jwtPayload = {
+    
+    email,
+    role,
+  };
+
+  const newAccessToken = jwt.sign(jwtPayload, config.access_key as string, {
+    expiresIn: "10d",
+  });
+
+  return {
+    accessToken: newAccessToken,
+  };
+};
 
 
 
@@ -100,4 +114,5 @@ const loginUserFromDB = async (payload: TLoginUser) => {
 export const AuthServices = {
   signUpUserIntoDB,
   loginUserFromDB,
+  refreshTokenGen,
 };
