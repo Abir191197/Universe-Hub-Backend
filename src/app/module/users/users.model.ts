@@ -32,6 +32,6 @@ const UserSchema = new Schema<TUser>(
   { timestamps: true }
 );
 
-const UserModel = mongoose.model<TUser>("Users", UserSchema, "Users");
+const UserModel = mongoose.model<TUser>("Users",UserSchema,"Users");
 
 export default UserModel;
