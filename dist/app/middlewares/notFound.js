@@ -6,7 +6,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_status_1 = __importDefault(require("http-status"));
-// Todo, you have nothing to change here. Just keep it as it is. If user hit any route that is not defined in your app then he/she will get "API Not Found" message. If you want to change it can do it in the message section.
 const notFound = (req, res, next) => {
     return res.status(http_status_1.default.NOT_FOUND).json({
         success: false,

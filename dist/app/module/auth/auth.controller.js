@@ -17,6 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const auth_service_1 = require("./auth.service");
+const config_1 = __importDefault(require("../../../config"));
 // SignIn function
 const Signup = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.AuthServices.signUpUserIntoDB(req.body);
@@ -27,6 +28,42 @@ const Signup = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0,
         data: result,
     });
 }));
+//LogIn function 
+const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_service_1.AuthServices.loginUserFromDB(req.body);
+    const { accessToken, refreshToken } = result;
+    res.cookie("accessToken", accessToken, {
+        secure: config_1.default.NODE_ENV === "development",
+        httpOnly: true,
+    });
+    res.cookie("refreshToken", refreshToken, {
+        secure: config_1.default.NODE_ENV === "development",
+        httpOnly: true,
+    });
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "User is logged in successfully!",
+        data: {
+            user: Object.assign(Object.assign({}, result.user.toObject()), { password: null }),
+            accessToken: result.accessToken,
+            refreshToken: result.refreshToken,
+        },
+    });
+}));
+// RefreshToken function
+const refreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { refreshToken } = req.cookies;
+    const result = yield auth_service_1.AuthServices.refreshTokenGen(refreshToken);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "User access token refreshed successfully!",
+        data: result,
+    });
+}));
 exports.AuthControllers = {
     Signup,
+    login,
+    refreshToken,
 };

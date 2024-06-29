@@ -8,7 +8,6 @@ const cloudinary_1 = require("cloudinary");
 const fs_1 = __importDefault(require("fs"));
 const multer_1 = __importDefault(require("multer"));
 const config_1 = __importDefault(require("../../config"));
-// Todo this file is responsible for custom made function to upload image to cloudinary, receiving file using multer and deleting file from temporary folder. Read the following blog to get a comprehensive understanding https://dev.to/md_enayeturrahman_2560e3/how-to-save-image-with-multer-j74
 cloudinary_1.v2.config({
     cloud_name: config_1.default.cloudinary_cloud_name,
     api_key: config_1.default.cloudinary_api_key,

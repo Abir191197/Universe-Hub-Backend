@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-
 import httpStatus from "http-status";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
@@ -10,14 +9,18 @@ import AppError from "../errors/AppError";
 const authVerify = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
-    if (!token) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized");
+    if (!token || !token.startsWith("Bearer ")) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        "Authorization token is missing or invalid"
+      );
     }
-    const tokenSplit = token?.split(" ");
+
+    const tokenSplit = token.split("Bearer ")[1];
     try {
       // Verify token
       const decoded = jwt.verify(
-        tokenSplit[1],
+        tokenSplit,
         config.access_key as string
       ) as JwtPayload;
 
@@ -25,7 +28,7 @@ const authVerify = (...requiredRoles: TUserRole[]) => {
       req.user = decoded;
 
       // Role checking
-      const role = (decoded as JwtPayload).role;
+      const role = decoded.role as TUserRole; // Ensure role exists and is of type TUserRole
       if (requiredRoles.length === 0 || requiredRoles.includes(role)) {
         return next();
       }
@@ -37,7 +40,7 @@ const authVerify = (...requiredRoles: TUserRole[]) => {
       );
     } catch (error) {
       // Handle token verification errors
-      throw new AppError(httpStatus.UNAUTHORIZED, "Invalid token");
+      throw new AppError(httpStatus.UNAUTHORIZED, "Invalid or expired token");
     }
   });
 };
