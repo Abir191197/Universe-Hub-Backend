@@ -26,12 +26,12 @@ const login = catchAsync(async (req: Request, res: Response) => {
   
 
   res.cookie("accessToken", accessToken, {
-    secure: config.NODE_ENV === "development",
+    secure: config.NODE_ENV === "production",
     httpOnly: true,
   });
 
 res.cookie("refreshToken", refreshToken, {
-  secure: config.NODE_ENV === "development",
+  secure: config.NODE_ENV === "production",
   httpOnly: true,
 });
 

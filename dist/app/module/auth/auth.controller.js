@@ -33,11 +33,11 @@ const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
     const result = yield auth_service_1.AuthServices.loginUserFromDB(req.body);
     const { accessToken, refreshToken } = result;
     res.cookie("accessToken", accessToken, {
-        secure: config_1.default.NODE_ENV === "development",
+        secure: config_1.default.NODE_ENV === "production",
         httpOnly: true,
     });
     res.cookie("refreshToken", refreshToken, {
-        secure: config_1.default.NODE_ENV === "development",
+        secure: config_1.default.NODE_ENV === "production",
         httpOnly: true,
     });
     (0, sendResponse_1.default)(res, {
