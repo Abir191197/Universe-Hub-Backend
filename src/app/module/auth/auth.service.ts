@@ -75,9 +75,17 @@ const loginUserFromDB = async (payload: TLoginUser) => {
        expiresIn: "12h",
      }
    );
+  
+  const refreshToken = jwt.sign(
+    jwtPayload,
+    config.refresh_key as string,
+    {
+      expiresIn: "30d",
+    }
+  );
 
 
-  return { user, accessToken }
+  return { user, accessToken, refreshToken };
 
 
 } 
