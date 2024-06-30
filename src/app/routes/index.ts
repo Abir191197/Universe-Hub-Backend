@@ -2,6 +2,7 @@ import express from "express";
 import { AuthRoutes } from "../module/auth/auth.route";
 import { UserRoutes } from "../module/users/users.route";
 import { CourseRoutes } from "../module/courses/course.route";
+import { fileRoutes } from "../module/File/file.route";
 
 const router = express.Router();
 
@@ -17,6 +18,10 @@ const moduleRoutes = [
   {
     path: "/courses",
     route:CourseRoutes,
+  },
+  {
+    path: "/files-upload",
+    route:fileRoutes
   }
 ];
 
