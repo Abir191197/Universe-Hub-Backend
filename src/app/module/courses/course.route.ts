@@ -9,8 +9,7 @@ const router = express.Router();
 router.post(
   "/create-course",
   authVerify(USER_ROLE.admin, USER_ROLE.student),
-  
-  courseControllers.CourseCreate
+  validateRequest(CourseValidation.courseValidationSchema),courseControllers.CourseCreate
 );
 
 
