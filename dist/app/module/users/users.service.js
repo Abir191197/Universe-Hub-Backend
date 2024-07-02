@@ -48,7 +48,26 @@ const updatedUserIntoDB = (payload, updateData) => __awaiter(void 0, void 0, voi
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to update user");
     }
 });
+//updated  role student into DB
+const updatedRoleIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const isUserExist = yield users_model_1.default.findOne({ _id: id });
+        if (!isUserExist) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+        }
+        if (isUserExist.role === "counsellor") {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User already counsellor role");
+        }
+        isUserExist.role = "counsellor";
+        yield isUserExist.save();
+        return isUserExist;
+    }
+    catch (error) {
+        throw error;
+    }
+});
 exports.UserService = {
     findUserFromDB,
     updatedUserIntoDB,
+    updatedRoleIntoDB
 };

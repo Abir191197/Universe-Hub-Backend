@@ -12,41 +12,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userControllers = void 0;
+exports.fileUploadController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const users_service_1 = require("./users.service");
-const findUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield users_service_1.UserService.findUserFromDB(req.user);
+const file_service_1 = require("./file.service");
+//file upload
+const fileUpload = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = {
+        fileInformation: req.file,
+        authUserInformation: req.user,
+        typeInformation: req.body,
+    };
+    const result = yield file_service_1.fileUploadService.createFileUploadIntoDB(payload);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "User profile retrieved successfully",
+        message: "File uploaded successfully",
         data: result,
     });
 }));
-const updatedUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield users_service_1.UserService.updatedUserIntoDB(req.user, req.body);
-    (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
-        success: true,
-        message: "Profile updated successfully",
-        data: result,
-    });
-}));
-const roleChange = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//file approved
+const fileApproved = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield users_service_1.UserService.updatedRoleIntoDB(id);
+    const result = yield file_service_1.fileUploadService.fileStatusChangeIntoDB(id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Role updated successfully",
+        message: "File Approved successfully",
         data: result,
     });
 }));
-exports.userControllers = {
-    findUser,
-    updatedUser,
-    roleChange,
+exports.fileUploadController = {
+    fileUpload,
+    fileApproved
 };

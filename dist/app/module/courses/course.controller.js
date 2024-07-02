@@ -12,21 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findLastCreatedUser = void 0;
-const users_model_1 = __importDefault(require("./users.model"));
-const findLastCreatedUser = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const lastUser = yield users_model_1.default.findOne({}).sort({ createdAt: -1 }).lean();
-        if (lastUser && lastUser.id) {
-            return lastUser.id;
-        }
-        else {
-            return null; // Return null or handle appropriately when no user or ID is found
-        }
-    }
-    catch (error) {
-        console.error("Error finding last created user:", error);
-        throw error; // You may want to handle this error more gracefully in your application
-    }
-});
-exports.findLastCreatedUser = findLastCreatedUser;
+exports.courseControllers = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
+const course_service_1 = require("./course.service");
+const CourseCreate = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield course_service_1.courseService.createCourseIntoDB(req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Course Create successfully",
+        data: result,
+    });
+}));
+exports.courseControllers = {
+    CourseCreate,
+};

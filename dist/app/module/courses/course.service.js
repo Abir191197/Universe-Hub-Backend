@@ -12,21 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findLastCreatedUser = void 0;
-const users_model_1 = __importDefault(require("./users.model"));
-const findLastCreatedUser = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const lastUser = yield users_model_1.default.findOne({}).sort({ createdAt: -1 }).lean();
-        if (lastUser && lastUser.id) {
-            return lastUser.id;
-        }
-        else {
-            return null; // Return null or handle appropriately when no user or ID is found
-        }
-    }
-    catch (error) {
-        console.error("Error finding last created user:", error);
-        throw error; // You may want to handle this error more gracefully in your application
-    }
+exports.courseService = void 0;
+const course_model_1 = __importDefault(require("./course.model"));
+const createCourseIntoDB = (courseData) => __awaiter(void 0, void 0, void 0, function* () {
+    const course = new course_model_1.default(courseData);
+    yield course.save();
+    return course.toObject();
 });
-exports.findLastCreatedUser = findLastCreatedUser;
+exports.courseService = {
+    createCourseIntoDB,
+};

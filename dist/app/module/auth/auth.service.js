@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthServices = exports.signUpUserIntoDB = void 0;
+exports.AuthServices = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_utils_1 = require("../users/user.utils");
@@ -51,7 +51,6 @@ const signUpUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function
         throw AppError_1.default;
     }
 });
-exports.signUpUserIntoDB = signUpUserIntoDB;
 //login user in site
 const loginUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // Checking if the user exists
@@ -100,7 +99,7 @@ const refreshTokenGen = (token) => __awaiter(void 0, void 0, void 0, function* (
     };
 });
 exports.AuthServices = {
-    signUpUserIntoDB: exports.signUpUserIntoDB,
+    signUpUserIntoDB,
     loginUserFromDB,
     refreshTokenGen,
 };
