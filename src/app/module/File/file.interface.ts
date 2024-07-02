@@ -6,5 +6,7 @@ export interface IFile {
   fileUrl: string;
   fileSize: number;
   fileType: string;
-  status: "Pending"| "Approved";
+  status: "Pending" | "Approved";
+  createdAt: Date;
+  updatedAt: Date;
 }

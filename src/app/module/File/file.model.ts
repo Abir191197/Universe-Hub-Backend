@@ -8,7 +8,9 @@ const fileSchema = new Schema<IFile>({
   fileUrl: { type: String, required: true },
   fileSize: { type: Number, required: true },
   fileType: { type: String, required: true },
-  status: { type: String, enum: ["Pending", "Approved"],default: "Pending" }
+  status: { type: String, enum: ["Pending", "Approved"], default: "Pending" },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const FileModel = model<IFile>("Files", fileSchema,"Files");

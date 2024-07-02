@@ -23,17 +23,24 @@ router.post(
       try {
         req.body = JSON.parse(req.body.data);
       } catch (error) {
-        return next(error); // Handle JSON parsing error
+        return next(error); 
       }
     }
     next();
   },
 
-  // Validation middleware using Zod schema
-  validateRequest(FileValidation.FileValidationSchema),
+ validateRequest(FileValidation.FileValidationSchema),
 
-  // Controller function for handling file upload logic
+  
   fileUploadController.fileUpload
 );
+
+
+router.put(
+  "/approve/:id",
+  authVerify(USER_ROLE.admin),
+  fileUploadController.fileApproved
+
+)
 
 export const fileRoutes = router;

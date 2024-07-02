@@ -3,6 +3,7 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { fileUploadService } from "./file.service";
 
+//file upload
 
 const fileUpload = catchAsync(async (req, res) => {
 
@@ -25,6 +26,31 @@ const fileUpload = catchAsync(async (req, res) => {
   });
 });
 
+
+
+//file approved
+
+
+
+const fileApproved = catchAsync(async (req, res) => {
+  
+  const { id } = req.params;
+
+  const result = await fileUploadService.fileStatusChangeIntoDB(id);
+
+ sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "File Approved successfully",
+    data: result,
+  });
+
+ });
+
+
+
+
 export const fileUploadController = {
   fileUpload,
+  fileApproved
 };
