@@ -48,8 +48,42 @@ const updatedUserIntoDB = async (
   }
 };
 
+
+//updated  role student into DB
+
+const updatedRoleIntoDB = async(
+  id:string
+) => {
+  try {
+    
+    const isUserExist = await UserModel.findOne({ _id: id });
+
+    if (!isUserExist) {
+      throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    
+    if (isUserExist.role === "counsellor")
+    {
+      throw new AppError(httpStatus.BAD_REQUEST, "User already counsellor role");
+    }
+
+    
+    isUserExist.role = "counsellor";
+
+    await isUserExist.save();
+
+    return isUserExist;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
 export const UserService = {
   
   findUserFromDB,
   updatedUserIntoDB,
+  updatedRoleIntoDB
 };

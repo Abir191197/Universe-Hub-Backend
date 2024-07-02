@@ -17,4 +17,11 @@ router.put(
   userControllers.updatedUser
 );
 
+
+router.put(
+  "/roleChange/:id",
+  authVerify(USER_ROLE.admin),
+  userControllers.roleChange
+)
+
 export const UserRoutes = router;

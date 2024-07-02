@@ -24,9 +24,22 @@ const updatedUser = catchAsync(async (req, res) => {
   });
 });
 
+const roleChange = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserService.updatedRoleIntoDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Role updated successfully",
+    data: result,
+  });
+});
+
+
 
 export const userControllers = {
-  
   findUser,
   updatedUser,
+  roleChange,
 };
