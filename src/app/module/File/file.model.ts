@@ -1,17 +1,16 @@
-import { model, Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 import { IFile } from "./file.interface";
 
-
-const FileSchema = new Schema<IFile>({
-  userId: { type: Schema.Types.ObjectId, required: true, ref: "Users" },
-  courseId: { type: Schema.Types.ObjectId, required: true, ref: "Courses" },
-  type: { type: String, required: true, enum: ["question", "note", "lecture"] },
+const fileSchema = new Schema<IFile>({
+  uploadedBy: { type: String, required: true },
+  // courseId: { type: Schema.Types.ObjectId, ref: 'Course' },
+  type: { type: String, enum: ["question", "note", "lecture"], required: true },
   fileUrl: { type: String, required: true },
-  fileName: { type: String, required: true },
   fileSize: { type: Number, required: true },
   fileType: { type: String, required: true },
+  status: { type: String, enum: ["Pending", "Approved"],default: "Pending" }
 });
 
-const FileModel = model<IFile>("Files", FileSchema, "Files");
+const FileModel = model<IFile>("Files", fileSchema,"Files");
 
 export default FileModel;

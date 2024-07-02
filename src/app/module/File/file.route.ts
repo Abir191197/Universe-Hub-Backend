@@ -1,17 +1,20 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import authVerify from "../../middlewares/authVerify";
+import { upload } from "../../utils/sendImageToCloud";
 import { USER_ROLE } from "../users/user.constant";
-import { FileValidation } from "./file.validation";
-import validateRequest from "../../middlewares/validateRequest";
 import { fileUploadController } from "./file.controller";
 const router = express.Router();
 
 router.post(
-  "/create-course",
+  "/file",
+
   authVerify(USER_ROLE.admin, USER_ROLE.student),
-  validateRequest(FileValidation.fileValidationSchema),
+  upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   fileUploadController.fileUpload
 );
-
 
 export const fileRoutes = router;

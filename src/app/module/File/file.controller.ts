@@ -5,7 +5,18 @@ import { fileUploadService } from "./file.service";
 
 
 const fileUpload = catchAsync(async (req, res) => {
-  const result = await fileUploadService.createFileUploadIntoDB(req.body);
+
+ 
+  const payload = {
+    fileInformation: req.file,
+    authUserInformation: req.user,
+    typeInformation:req.body,
+
+  };
+
+
+
+  const result = await fileUploadService.createFileUploadIntoDB(payload);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

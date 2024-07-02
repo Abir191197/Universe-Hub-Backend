@@ -20,7 +20,7 @@ const moduleRoutes = [
     route:CourseRoutes,
   },
   {
-    path: "/files-upload",
+    path: "/files-Upload",
     route:fileRoutes
   }
 ];

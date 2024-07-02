@@ -1,29 +1,17 @@
 import { Response } from "express";
+import httpStatus from "http-status";
 
-
-
-type TMeta = {
-  limit: number;
-  page: number;
-  total: number;
-  totalPage: number;
-};
-
-type TResponse<T> = {
+interface ApiResponse<T> {
   statusCode: number;
   success: boolean;
-  message?: string;
-  meta?: TMeta;
-  data: T;
-};
+  message: string;
+  token?: string;
+  data?: T;
+}
 
-const sendResponse = <T>(res: Response, data: TResponse<T>) => {
-  res.status(data?.statusCode).json({
-    success: data.success,
-    message: data.message,
-    meta: data.meta,
-    data: data.data,
-  });
+const sendResponse = <T>(res: Response, responseData: ApiResponse<T>) => {
+  const { statusCode, success, message, data, token } = responseData;
+  res.status(statusCode).json({ success, statusCode, message, data, token });
 };
 
 export default sendResponse;
