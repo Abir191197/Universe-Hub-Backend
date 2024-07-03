@@ -1,66 +1,43 @@
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
-import config from '../../config';
-import multer from 'multer';
-import fs from 'fs';
+import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 
+import multer from "multer";
+import config from "../../config";
 
-// Configuration
+// Cloudinary configuration
 cloudinary.config({
   cloud_name: config.cloudinary_cloud_name,
   api_key: config.cloudinary_api_key,
   api_secret: config.cloudinary_api_secret,
 });
 
+// Function to send image to Cloudinary
+export const sendImageToCloud = (
+  fileName: string,
+  buffer: Buffer
+): Promise<UploadApiResponse> => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { public_id: fileName.trim(), resource_type: "auto" },
+      (error, result) => {
+        if (error) {
+          return reject(error);
+        }
+        if (!result) {
+          return reject(new Error("No result from Cloudinary upload"));
+        }
+        resolve(result);
+      }
+    );
 
- export const sendImageToCloud = (
-   fileName: string,
-   path: string
- ): Promise<UploadApiResponse> => {
-   return new Promise((resolve, reject) => {
-     cloudinary.uploader.upload(
-       path,
-       { public_id: fileName.trim(), resource_type: "auto" },
-       (error, result) => {
-         if (error) {
-           return reject(error);
-         }
-         if (!result) {
-           return reject(new Error("No result from Cloudinary upload"));
-         }
-         resolve(result);
+    uploadStream.end(buffer);
+  });
+};
 
-         // delete a file asynchronously
-         fs.unlink(path, (err) => {
-           if (err) {
-             console.error(`Error deleting file: ${err.message}`);
-           } else {
-             console.log("File deleted successfully.");
-           }
-         });
-       }
-     );
-   });
- };
-  
-  
-  
+// Multer memory storage configuration
+const storage = multer.memoryStorage();
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadPath = process.cwd() + "/uploads/";
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath);
-    }
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + "-" + uniqueSuffix);
-  },
-});
-
+// File filter for Multer
 const fileFilter = (req: any, file: any, cb: any) => {
-  // Accept only specific file types
   const allowedMimeTypes = [
     "image/jpeg",
     "image/png",
@@ -79,4 +56,5 @@ const fileFilter = (req: any, file: any, cb: any) => {
   }
 };
 
-export const upload = multer({ storage: storage, fileFilter: fileFilter });
+// Export Multer upload middleware
+export const upload = multer({ storage, fileFilter });
