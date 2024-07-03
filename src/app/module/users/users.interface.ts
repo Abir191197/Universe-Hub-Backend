@@ -1,3 +1,4 @@
+import mongoose, { Types } from "mongoose";
 import { USER_ROLE } from "./user.constant";
 
 export interface TUser {
@@ -10,6 +11,7 @@ export interface TUser {
   role: "admin" | "counsellor" | "student";
   status: string;
   isDeleted: boolean;
+  courses: Types.ObjectId[];
 }
 
 export type TUserRole = keyof typeof USER_ROLE;

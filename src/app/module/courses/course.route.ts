@@ -15,5 +15,11 @@ router.post(
 router.get("/", authVerify(USER_ROLE.admin, USER_ROLE.student),
 courseControllers.getAllCourse);
 
+router.put("/:id", authVerify(USER_ROLE.admin, USER_ROLE.student),
+
+courseControllers.addCourseInPersonalProfile
+);
+
+
 
 export const CourseRoutes = router;
