@@ -12,5 +12,8 @@ router.post(
   validateRequest(CourseValidation.courseValidationSchema),courseControllers.CourseCreate
 );
 
+router.get("/", authVerify(USER_ROLE.admin, USER_ROLE.student),
+courseControllers.getAllCourse);
+
 
 export const CourseRoutes = router;

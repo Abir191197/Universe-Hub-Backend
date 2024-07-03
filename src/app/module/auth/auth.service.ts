@@ -1,16 +1,16 @@
 import bcrypt from "bcrypt";
+import httpStatus from "http-status";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import config from "../../../config";
 import AppError from "../../errors/AppError";
 import { findLastCreatedUser } from "../users/user.utils";
 import { TUser } from "../users/users.interface";
 import UserModel from "../users/users.model";
-import config from "../../../config";
 import { TLoginUser } from "./auth.interface";
-import httpStatus from "http-status";
-import jwt,{ JwtPayload } from "jsonwebtoken";
 
 //signUp user or create user
 
- const signUpUserIntoDB = async (payload: TUser) => {
+const signUpUserIntoDB = async (payload: TUser) => {
   try {
     const lastUserId = await findLastCreatedUser();
     let newUserId = 1000;
@@ -19,8 +19,11 @@ import jwt,{ JwtPayload } from "jsonwebtoken";
     }
     payload.id = newUserId;
 
-    const hashedPassword = await bcrypt.hash(payload.password,Number (config.bcrypt_salt_rounds))
-    
+    const hashedPassword = await bcrypt.hash(
+      payload.password,
+      Number(config.bcrypt_salt_rounds)
+    );
+
     payload.password = hashedPassword; //password Hashed
 
     const result = await UserModel.create(payload);
@@ -32,7 +35,6 @@ import jwt,{ JwtPayload } from "jsonwebtoken";
     throw AppError;
   }
 };
-
 
 //login user in site
 
@@ -69,7 +71,7 @@ const loginUserFromDB = async (payload: TLoginUser) => {
   };
 
   const accessToken = jwt.sign(jwtPayload, config.access_key as string, {
-    expiresIn: "12h",
+    expiresIn: "30d",
   });
 
   const refreshToken = jwt.sign(jwtPayload, config.refresh_key as string, {
@@ -77,20 +79,15 @@ const loginUserFromDB = async (payload: TLoginUser) => {
   });
 
   return { user, accessToken, refreshToken };
-
-
-} 
-
+};
 
 // RefreshToken function
-  
 
 const refreshTokenGen = async (token: string) => {
   const decoded = jwt.verify(token, config.access_key as string) as JwtPayload;
   const { email, role } = decoded;
 
   const jwtPayload = {
-    
     email,
     role,
   };
@@ -103,13 +100,6 @@ const refreshTokenGen = async (token: string) => {
     accessToken: newAccessToken,
   };
 };
-
-
-
-
-
-
-
 
 export const AuthServices = {
   signUpUserIntoDB,
