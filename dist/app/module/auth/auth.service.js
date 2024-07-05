@@ -25,12 +25,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthServices = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const http_status_1 = __importDefault(require("http-status"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const config_1 = __importDefault(require("../../../config"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_utils_1 = require("../users/user.utils");
 const users_model_1 = __importDefault(require("../users/users.model"));
-const config_1 = __importDefault(require("../../../config"));
-const http_status_1 = __importDefault(require("http-status"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 //signUp user or create user
 const signUpUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -76,7 +76,7 @@ const loginUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function*
         role: user.role,
     };
     const accessToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.access_key, {
-        expiresIn: "12h",
+        expiresIn: "30d",
     });
     const refreshToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.refresh_key, {
         expiresIn: "30d",

@@ -12,4 +12,6 @@ const course_validation_1 = require("./course.validation");
 const course_controller_1 = require("./course.controller");
 const router = express_1.default.Router();
 router.post("/create-course", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), (0, validateRequest_1.default)(course_validation_1.CourseValidation.courseValidationSchema), course_controller_1.courseControllers.CourseCreate);
+router.get("/", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), course_controller_1.courseControllers.getAllCourse);
+router.put("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), course_controller_1.courseControllers.addCourseInPersonalProfile);
 exports.CourseRoutes = router;

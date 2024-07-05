@@ -13,12 +13,46 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.courseService = void 0;
+const QueryBuilder_1 = __importDefault(require("../../builders/QueryBuilder"));
 const course_model_1 = __importDefault(require("./course.model"));
+const courses_constant_1 = require("./courses.constant");
+const users_model_1 = __importDefault(require("../users/users.model"));
+const AppError_1 = __importDefault(require("../../errors/AppError"));
+const http_status_1 = __importDefault(require("http-status"));
 const createCourseIntoDB = (courseData) => __awaiter(void 0, void 0, void 0, function* () {
     const course = new course_model_1.default(courseData);
     yield course.save();
     return course.toObject();
 });
+const getAllCourserFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const queryObj = Object.assign({}, query);
+    const courseQuery = new QueryBuilder_1.default(course_model_1.default.find(), queryObj).search(courses_constant_1.courseSearchableFields).
+        filter().
+        paginate().
+        sort().
+        fields(); //chaining
+    const result = yield courseQuery.modelQuery;
+    return result;
+});
+const createCourseInProfileIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, authInformation } = payload;
+    // Check if the user exists
+    const user = yield users_model_1.default.findOne({ email: authInformation.email });
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+    }
+    // Check if the course exists
+    const course = yield course_model_1.default.findById(id);
+    if (!course) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Course not found");
+    }
+    // Add the course ID to the user's courses array if it doesn't already exist
+    user.courses.addToSet(course._id);
+    yield user.save();
+    return user;
+});
 exports.courseService = {
     createCourseIntoDB,
+    getAllCourserFromDB,
+    createCourseInProfileIntoDB,
 };

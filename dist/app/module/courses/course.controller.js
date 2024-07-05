@@ -17,6 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const course_service_1 = require("./course.service");
+//create course only admin
 const CourseCreate = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield course_service_1.courseService.createCourseIntoDB(req.body);
     (0, sendResponse_1.default)(res, {
@@ -26,6 +27,35 @@ const CourseCreate = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
+//get course and search ,filter, sort,  pagination 
+const getAllCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield course_service_1.courseService.getAllCourserFromDB(req.query);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Courses are retrieved  succesfully",
+        data: result,
+    });
+}));
+//add course in  student profile
+const addCourseInPersonalProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const authInformation = req.user;
+    // Creating the payload object
+    const payload = {
+        id,
+        authInformation,
+    };
+    const result = yield course_service_1.courseService.createCourseInProfileIntoDB(payload);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Course Added  successfully in personal Profile",
+        data: result,
+    });
+}));
 exports.courseControllers = {
     CourseCreate,
+    getAllCourse,
+    addCourseInPersonalProfile,
 };
