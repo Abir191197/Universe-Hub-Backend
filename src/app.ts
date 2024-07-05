@@ -5,28 +5,46 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Request, Response } from "express";
-import router from "./app/routes";
+
 import notFound from "./app/middlewares/notFound";
+import router from "./app/routes";
 import globalErrorHandler from "./app/middlewares/globalErrorhandler";
 
 const app = express();
 
-//parsers
+// Parsers
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({ origin: ["http://localhost:5173/"], credentials: true }));
+// Allow multiple origins for CORS
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://universe-hub.vercel.app",
+];
+const corsOptions = {
+  origin: (origin: any, callback: any) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
 
-// application routes
+app.use(cors(corsOptions));
+
+// Application routes
 app.use("/api", router);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("server run 24x7");
+  res.send("Server runs 24x7");
 });
 
-app.use(globalErrorHandler); // This is connected with the globalErrorhandler.ts file at the middleware folder.
+// Global error handler
+app.use(globalErrorHandler);
 
-//Not Found
-app.use(notFound); // This is connected with the notFound.ts file at the middleware folder.
+// Not Found middleware
+app.use(notFound);
 
 export default app;

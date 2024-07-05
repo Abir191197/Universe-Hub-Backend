@@ -10,7 +10,7 @@ const UserSchema = new Schema<TUser>(
     },
     name: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true, select: false },
+    password: { type: String, required: true },
     phone: { type: String, required: true },
     address: { type: String, required: true },
     courses: [{ type: Schema.Types.ObjectId, ref: "Courses", default: [] }],

@@ -10,20 +10,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
-const routes_1 = __importDefault(require("./app/routes"));
 const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
+const routes_1 = __importDefault(require("./app/routes"));
 const globalErrorhandler_1 = __importDefault(require("./app/middlewares/globalErrorhandler"));
 const app = (0, express_1.default)();
-//parsers
+// Parsers
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)({ origin: ["http://localhost:5173/"], credentials: true }));
-// application routes
+// Allow multiple origins for CORS
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://universe-hub.vercel.app",
+];
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
+};
+app.use((0, cors_1.default)(corsOptions));
+// Application routes
 app.use("/api", routes_1.default);
 app.get("/", (req, res) => {
-    res.send("server run 24x7");
+    res.send("Server runs 24x7");
 });
-app.use(globalErrorhandler_1.default); // This is connected with the globalErrorhandler.ts file at the middleware folder.
-//Not Found
-app.use(notFound_1.default); // This is connected with the notFound.ts file at the middleware folder.
+// Global error handler
+app.use(globalErrorhandler_1.default);
+// Not Found middleware
+app.use(notFound_1.default);
 exports.default = app;
