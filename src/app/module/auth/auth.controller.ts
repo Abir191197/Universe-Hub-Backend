@@ -25,14 +25,18 @@ const login = catchAsync(async (req: Request, res: Response) => {
 
   
 
-  res.cookie("accessToken", accessToken, {
-    secure: config.NODE_ENV === "production",
-    httpOnly: true,
-  });
+  // res.cookie("accessToken", accessToken, {
+  //   secure: config.NODE_ENV === "production",
+  //   httpOnly: true,
+  //   sameSite: true,
+  //   maxAge: 1000 * 60 * 60 * 24 * 365,
+  // });
 
 res.cookie("refreshToken", refreshToken, {
   secure: config.NODE_ENV === "production",
   httpOnly: true,
+  sameSite: true,
+  maxAge: 1000 * 60 * 60 * 24 * 365,
 });
 
 
