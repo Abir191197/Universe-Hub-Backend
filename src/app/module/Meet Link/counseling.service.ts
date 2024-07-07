@@ -1,3 +1,4 @@
+import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import CounselingModel from "./counseling.model";
 
@@ -35,6 +36,21 @@ const createCounselingIntoDB = async (payload: {
   }
 };
 
-export const MeetLinkServices = {
+
+//get ALl Event From DB and sent it  Controllers
+
+const getCounsellingFromDB = async () => {
+  try {
+    const result = await CounselingModel.find();
+    return result;
+  } catch (error) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Failed to retrieved Counseling");
+  }
+};
+
+
+
+export const CounselingServices = {
   createCounselingIntoDB,
+  getCounsellingFromDB,
 };
