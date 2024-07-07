@@ -3,6 +3,7 @@ import { AuthRoutes } from "../module/auth/auth.route";
 import { UserRoutes } from "../module/users/users.route";
 import { CourseRoutes } from "../module/courses/course.route";
 import { fileRoutes } from "../module/File/file.route";
+import { MeetRoutes } from "../module/Counseling/meet.route";
 
 const router = express.Router();
 
@@ -17,12 +18,16 @@ const moduleRoutes = [
   },
   {
     path: "/courses",
-    route:CourseRoutes,
+    route: CourseRoutes,
   },
   {
     path: "/files-Upload",
-    route:fileRoutes
-  }
+    route: fileRoutes,
+  },
+  {
+    path: "/Counseling",
+    route: MeetRoutes,
+  },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route)); // This will automatically loop your routes that you will add in the moduleRoutes array

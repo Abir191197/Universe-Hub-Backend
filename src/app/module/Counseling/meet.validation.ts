@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Define the Zod schema based on your Mongoose schema
-const MeetValidationSchema = z.object({
+const CounselingValidationSchema = z.object({
   body: z.object({
     createBy: z.string(),
     Duration: z
@@ -15,4 +15,4 @@ const MeetValidationSchema = z.object({
   }),
 });
 
-export const MeetValidation = { MeetValidationSchema };
+export const CounselingValidation = { CounselingValidationSchema };

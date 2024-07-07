@@ -30,8 +30,6 @@ router.post(
   },
 
  validateRequest(FileValidation.FileValidationSchema),
-
-  
   fileUploadController.fileUpload
 );
 
