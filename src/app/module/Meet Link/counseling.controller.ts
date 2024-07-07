@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { MeetLinkServices } from "./meet.service";
+import { MeetLinkServices } from "./counseling.service";
 
 const createCounseling = catchAsync(async (req, res) => {
  const payload = {

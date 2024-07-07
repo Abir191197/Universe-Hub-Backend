@@ -1,9 +1,8 @@
 import { Schema, model } from 'mongoose';
 import { ICounseling } from './counseling.interface';
 
-
 const CounselingSchema = new Schema<ICounseling>({
-  createBy: { type: String, required: true },
+  createBy: String, // Should match the type 'string' from ICounseling
   Duration: {
     type: Number,
     enum: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],

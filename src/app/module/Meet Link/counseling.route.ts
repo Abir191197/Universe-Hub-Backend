@@ -4,7 +4,7 @@ import { USER_ROLE } from "../users/user.constant";
 import validateRequest from "../../middlewares/validateRequest";
 
 import { createCounselingControllers } from "./counseling.controller";
-import { CounselingValidation } from "./meet.validation";
+import { CounselingValidation } from "./counseling.validation";
 
 const router = express.Router();
 

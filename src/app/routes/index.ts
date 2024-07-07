@@ -3,7 +3,7 @@ import { AuthRoutes } from "../module/auth/auth.route";
 import { UserRoutes } from "../module/users/users.route";
 import { CourseRoutes } from "../module/courses/course.route";
 import { fileRoutes } from "../module/File/file.route";
-import { MeetRoutes } from "../module/Counseling/meet.route";
+import { MeetRoutes } from "../module/Meet Link/counseling.route";
 
 const router = express.Router();
 
