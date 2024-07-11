@@ -11,10 +11,10 @@ export interface TUser {
   role: "admin" | "counsellor" | "student";
   status: string;
   isDeleted: boolean;
-  courses: Types.ObjectId[];
   imageLink: string;
   program: string;
   coverLink: string;
+  courses: Types.ObjectId[];
 }
 
 export type TUserRole = keyof typeof USER_ROLE;
