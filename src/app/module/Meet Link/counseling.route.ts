@@ -23,6 +23,16 @@ router.get(
 );
 
 
+router.post(
+  "/meetCreate",
+  authVerify(USER_ROLE.admin, USER_ROLE.counsellor),
+  CounselingControllers.createMeetLink
+
+
+
+);
+
+
 
 
 

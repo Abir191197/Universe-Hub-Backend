@@ -12,6 +12,9 @@ export interface TUser {
   status: string;
   isDeleted: boolean;
   courses: Types.ObjectId[];
+  imageLink: string;
+  program: string;
+  coverLink: string;
 }
 
 export type TUserRole = keyof typeof USER_ROLE;

@@ -29,7 +29,25 @@ const UserSchema = new Schema<TUser>(
       required: true,
       default: false,
     },
+    imageLink: {
+      type: String,
+      required: true,
+      default:
+        "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg",
+    },
+    coverLink: {
+      type: String,
+      require: true,
+      default:
+        "https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+    },
+    program: {
+      type: String,
+      required: true,
+      default: "Active",
+    },
   },
+
   { timestamps: true }
 );
 

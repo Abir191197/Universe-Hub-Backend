@@ -36,7 +36,19 @@ const getAllEvent = catchAsync(async (req, res) => {
 });
 
 
+//Create Google meet link
+
+const createMeetLink = catchAsync(async (req, res) => {
+  
+
+
+})
+
+
+
+
 export const CounselingControllers = {
   createCounseling,
   getAllEvent,
+  createMeetLink,
 };

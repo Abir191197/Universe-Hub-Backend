@@ -48,9 +48,16 @@ const getCounsellingFromDB = async () => {
   }
 };
 
+const CreateGoogleMeetLink = async () => {
+  
+
+
+}
+
 
 
 export const CounselingServices = {
   createCounselingIntoDB,
   getCounsellingFromDB,
+  CreateGoogleMeetLink,
 };
