@@ -45,7 +45,7 @@ const UserSchema = new Schema<TUser>(
       type: String,
       required: true,
       default:
-        "BACHELOR OF SCIENCE IN COMPUTER SCIENCE AND ENGINEERING (BSCSE)",
+        "BSCSE",
     },
   },
 

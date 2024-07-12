@@ -64,7 +64,7 @@ const UserSchema = new mongoose_1.Schema({
     program: {
         type: String,
         required: true,
-        default: "BACHELOR OF SCIENCE IN COMPUTER SCIENCE AND ENGINEERING (BSCSE)",
+        default: "BSCSE",
     },
 }, { timestamps: true });
 const UserModel = mongoose_1.default.model("Users", UserSchema, "Users");
