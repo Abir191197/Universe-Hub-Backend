@@ -8,6 +8,7 @@ const auth_route_1 = require("../module/auth/auth.route");
 const users_route_1 = require("../module/users/users.route");
 const course_route_1 = require("../module/courses/course.route");
 const file_route_1 = require("../module/File/file.route");
+const counseling_route_1 = require("../module/Meet Link/counseling.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -24,8 +25,12 @@ const moduleRoutes = [
     },
     {
         path: "/files-Upload",
-        route: file_route_1.fileRoutes
-    }
+        route: file_route_1.fileRoutes,
+    },
+    {
+        path: "/Counseling",
+        route: counseling_route_1.MeetRoutes,
+    },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route)); // This will automatically loop your routes that you will add in the moduleRoutes array
 exports.default = router;

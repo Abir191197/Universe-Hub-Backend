@@ -32,13 +32,17 @@ const Signup = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0,
 const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.AuthServices.loginUserFromDB(req.body);
     const { accessToken, refreshToken } = result;
-    res.cookie("accessToken", accessToken, {
-        secure: config_1.default.NODE_ENV === "production",
-        httpOnly: true,
-    });
+    // res.cookie("accessToken", accessToken, {
+    //   secure: config.NODE_ENV === "production",
+    //   httpOnly: true,
+    //   sameSite: true,
+    //   maxAge: 1000 * 60 * 60 * 24 * 365,
+    // });
     res.cookie("refreshToken", refreshToken, {
         secure: config_1.default.NODE_ENV === "production",
         httpOnly: true,
+        sameSite: true,
+        maxAge: 1000 * 60 * 60 * 24 * 365,
     });
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

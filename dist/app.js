@@ -10,9 +10,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
+const globalErrorhandler_1 = __importDefault(require("./app/middlewares/globalErrorhandler"));
 const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const routes_1 = __importDefault(require("./app/routes"));
-const globalErrorhandler_1 = __importDefault(require("./app/middlewares/globalErrorhandler"));
 const app = (0, express_1.default)();
 // Parsers
 app.use(express_1.default.json());
