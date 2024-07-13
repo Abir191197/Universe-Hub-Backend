@@ -11,7 +11,9 @@ const findUserFromDB = async (payload: JwtPayload | null) => {
     if (payload !== null) {
       const result = await UserModel.findOne({
         email: payload.email,
-      }).select("-password");
+      })
+        .select("-password")
+        .populate("courses");
       return result;
     }
   } catch (error) {
