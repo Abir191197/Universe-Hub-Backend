@@ -56,10 +56,29 @@ const addCourseInPersonalProfile = catchAsync(async(req,res)=> {
 
 })
 
+//Get find single course from Database
+
+const getSingleCourse = catchAsync(async (req, res) => {
+
+  const { id } = req.params;
+  
+  const result = await courseService.getSingleCourseFromDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "One Course founded ",
+    data: result,
+  });
+
+})
+
+
+
 
 
 export const courseControllers = {
   CourseCreate,
   getAllCourse,
   addCourseInPersonalProfile,
+  getSingleCourse,
 };

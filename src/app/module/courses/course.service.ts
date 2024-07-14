@@ -8,11 +8,16 @@ import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { Types } from "mongoose";
 
+
+//create Course in the Database
+
 const createCourseIntoDB = async (courseData: ICourse): Promise<ICourse> => {
   const course = new CourseModel(courseData);
   await course.save();
   return course.toObject();
 };
+
+//get All course
 
 const getAllCourserFromDB = async (query: Record<string, unknown>) => {
   
@@ -20,16 +25,20 @@ const getAllCourserFromDB = async (query: Record<string, unknown>) => {
   
 
 
-  const courseQuery = new QueryBuilder(CourseModel.find(), queryObj).search(courseSearchableFields).
-    filter().
-    paginate().
-    sort().
-    fields(); //chaining
+  const courseQuery = new QueryBuilder(
+    CourseModel.find().populate("files"),
+    queryObj
+  )
+    .search(courseSearchableFields)
+    .filter()
+    .paginate()
+    .sort()
+    .fields(); //chaining
 
  const result = await courseQuery.modelQuery;
  return result;
 }
-
+//student add course in the profile
 
 const createCourseInProfileIntoDB = async (payload: {
   id: string;
@@ -60,8 +69,31 @@ const createCourseInProfileIntoDB = async (payload: {
   return user;
 };
 
+// Get single course find from Database logic
+
+const getSingleCourseFromDB = async (id: string) => {
+  try {
+    const result = await CourseModel.findOne({ _id: id }).populate("files");
+    if (!result) {
+      throw new AppError(httpStatus.NOT_FOUND, "Course not found");
+    }
+    return result;
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    } else {
+      throw new AppError(httpStatus.BAD_REQUEST, "Failed to retrieve Course");
+    }
+  }
+};
+
+
+
+
+
 export const courseService = {
   createCourseIntoDB,
   getAllCourserFromDB,
   createCourseInProfileIntoDB,
+  getSingleCourseFromDB,
 };

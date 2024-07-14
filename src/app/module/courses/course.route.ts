@@ -20,6 +20,9 @@ router.put("/:id", authVerify(USER_ROLE.admin, USER_ROLE.student),
 courseControllers.addCourseInPersonalProfile
 );
 
+router.get("/:id", authVerify(USER_ROLE.admin, USER_ROLE.student),
+courseControllers.getSingleCourse);
+
 
 
 export const CourseRoutes = router;
