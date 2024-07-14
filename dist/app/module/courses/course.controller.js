@@ -54,8 +54,20 @@ const addCourseInPersonalProfile = (0, catchAsync_1.default)((req, res) => __awa
         data: result,
     });
 }));
+//Get find single course from Database
+const getSingleCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield course_service_1.courseService.getSingleCourseFromDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "One Course founded ",
+        data: result,
+    });
+}));
 exports.courseControllers = {
     CourseCreate,
     getAllCourse,
     addCourseInPersonalProfile,
+    getSingleCourse,
 };
