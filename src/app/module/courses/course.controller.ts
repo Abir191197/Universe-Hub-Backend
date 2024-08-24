@@ -42,10 +42,8 @@ const addCourseInPersonalProfile = catchAsync(async(req,res)=> {
     const payload = {
       id,
       authInformation,
-    };
-
-
-
+  };
+  
   const result = await courseService.createCourseInProfileIntoDB(payload);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -55,6 +53,33 @@ const addCourseInPersonalProfile = catchAsync(async(req,res)=> {
   });
 
 })
+
+
+//remove course from user profile 
+
+const removeCourseFromPersonalProfile = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const authInformation = req.user;
+
+  const payload = {
+    id,
+    authInformation,
+  };
+
+  const result = await courseService.removeCourseFromProfileInDB(payload);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Course removed successfully from personal profile",
+    data: result,
+  });
+});
+
+
+
+
+
+
 
 //Get find single course from Database
 
@@ -81,4 +106,5 @@ export const courseControllers = {
   getAllCourse,
   addCourseInPersonalProfile,
   getSingleCourse,
+  removeCourseFromPersonalProfile,
 };

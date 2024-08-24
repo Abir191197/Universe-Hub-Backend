@@ -55,6 +55,24 @@ const createCourseInProfileIntoDB = (payload) => __awaiter(void 0, void 0, void 
     yield user.save();
     return user;
 });
+//remove course from student profile
+const removeCourseFromProfileInDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, authInformation } = payload;
+    // Check if the user exists
+    const user = yield users_model_1.default.findOne({ email: authInformation.email });
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+    }
+    // Check if the course exists
+    const course = yield course_model_1.default.findById(id);
+    if (!course) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Course not found");
+    }
+    // Ensure that the courses field is treated as a Mongoose Types.Array
+    user.courses.pull(course._id);
+    yield user.save();
+    return user;
+});
 // Get single course find from Database logic
 const getSingleCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -78,4 +96,5 @@ exports.courseService = {
     getAllCourserFromDB,
     createCourseInProfileIntoDB,
     getSingleCourseFromDB,
+    removeCourseFromProfileInDB,
 };

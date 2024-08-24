@@ -16,8 +16,13 @@ router.get("/", authVerify(USER_ROLE.admin, USER_ROLE.student),
 courseControllers.getAllCourse);
 
 router.put("/:id", authVerify(USER_ROLE.admin, USER_ROLE.student),
-
 courseControllers.addCourseInPersonalProfile
+);
+
+router.delete(
+  "/:id",
+  authVerify(USER_ROLE.admin, USER_ROLE.student),
+  courseControllers.removeCourseFromPersonalProfile
 );
 
 router.get("/:id", authVerify(USER_ROLE.admin, USER_ROLE.student),

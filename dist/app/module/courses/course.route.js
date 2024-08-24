@@ -14,5 +14,6 @@ const router = express_1.default.Router();
 router.post("/create-course", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), (0, validateRequest_1.default)(course_validation_1.CourseValidation.courseValidationSchema), course_controller_1.courseControllers.CourseCreate);
 router.get("/", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), course_controller_1.courseControllers.getAllCourse);
 router.put("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), course_controller_1.courseControllers.addCourseInPersonalProfile);
+router.delete("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), course_controller_1.courseControllers.removeCourseFromPersonalProfile);
 router.get("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), course_controller_1.courseControllers.getSingleCourse);
 exports.CourseRoutes = router;

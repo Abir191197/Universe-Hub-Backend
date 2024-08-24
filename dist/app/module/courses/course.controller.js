@@ -54,6 +54,22 @@ const addCourseInPersonalProfile = (0, catchAsync_1.default)((req, res) => __awa
         data: result,
     });
 }));
+//remove course from user profile 
+const removeCourseFromPersonalProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const authInformation = req.user;
+    const payload = {
+        id,
+        authInformation,
+    };
+    const result = yield course_service_1.courseService.removeCourseFromProfileInDB(payload);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Course removed successfully from personal profile",
+        data: result,
+    });
+}));
 //Get find single course from Database
 const getSingleCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -70,4 +86,5 @@ exports.courseControllers = {
     getAllCourse,
     addCourseInPersonalProfile,
     getSingleCourse,
+    removeCourseFromPersonalProfile,
 };

@@ -38,6 +38,9 @@ const getAllCourserFromDB = async (query: Record<string, unknown>) => {
  const result = await courseQuery.modelQuery;
  return result;
 }
+
+
+
 //student add course in the profile
 
 const createCourseInProfileIntoDB = async (payload: {
@@ -69,6 +72,40 @@ const createCourseInProfileIntoDB = async (payload: {
   return user;
 };
 
+
+//remove course from student profile
+
+const removeCourseFromProfileInDB = async (payload: {
+  id: string;
+  authInformation: JwtPayload;
+}) => {
+  const { id, authInformation } = payload;
+
+  // Check if the user exists
+  const user = await UserModel.findOne({ email: authInformation.email });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // Check if the course exists
+  const course = await CourseModel.findById(id);
+  if (!course) {
+    throw new AppError(httpStatus.NOT_FOUND, "Course not found");
+  }
+
+  // Ensure that the courses field is treated as a Mongoose Types.Array
+  (user.courses as Types.Array<Types.ObjectId>).pull(course._id);
+  await user.save();
+
+  return user;
+};
+
+
+
+
+
+
+
 // Get single course find from Database logic
 
 const getSingleCourseFromDB = async (id: string) => {
@@ -96,4 +133,5 @@ export const courseService = {
   getAllCourserFromDB,
   createCourseInProfileIntoDB,
   getSingleCourseFromDB,
+  removeCourseFromProfileInDB,
 };
