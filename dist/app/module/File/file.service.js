@@ -47,6 +47,8 @@ const createFileUploadIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fu
     const buffer = fileInformation.buffer;
     const { secure_url, resource_type, bytes } = yield (0, sendImageToCloud_1.sendImageToCloud)(fileName, buffer);
     const newFile = {
+        fileName: typeInformation.fileName,
+        fileDescription: typeInformation.fileDescription,
         uploadedBy: authUserInformation.name,
         type: typeInformation.type,
         fileUrl: secure_url,

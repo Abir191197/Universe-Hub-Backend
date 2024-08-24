@@ -4,6 +4,8 @@ const mongoose_1 = require("mongoose");
 const fileSchema = new mongoose_1.Schema({
     uploadedBy: { type: String, required: true },
     // courseId: { type: Schema.Types.ObjectId, ref: 'Course' },
+    fileName: { type: String, required: true },
+    fileDescription: { type: String, required: true },
     type: { type: String, enum: ["question", "note", "lecture"], required: true },
     fileUrl: { type: String, required: true },
     fileSize: { type: Number, required: true },

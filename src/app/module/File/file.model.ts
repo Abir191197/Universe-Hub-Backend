@@ -4,6 +4,9 @@ import { IFile } from "./file.interface";
 const fileSchema = new Schema<IFile>({
   uploadedBy: { type: String, required: true },
   // courseId: { type: Schema.Types.ObjectId, ref: 'Course' },
+  fileName: { type: String, required: true },
+  fileDescription: { type: String, required: true },
+
   type: { type: String, enum: ["question", "note", "lecture"], required: true },
   fileUrl: { type: String, required: true },
   fileSize: { type: Number, required: true },

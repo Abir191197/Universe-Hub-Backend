@@ -53,6 +53,8 @@ const createFileUploadIntoDB = async (payload: {
   const { secure_url, resource_type, bytes } = await sendImageToCloud(fileName, buffer);
 
   const newFile: Partial<IFile> = {
+    fileName: typeInformation.fileName,
+    fileDescription:typeInformation.fileDescription,
     uploadedBy: authUserInformation.name,
     type: typeInformation.type,
     fileUrl: secure_url as string,
