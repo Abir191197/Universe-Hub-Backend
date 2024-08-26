@@ -15,5 +15,5 @@ const fileSchema = new mongoose_1.Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });
-const FileModel = (0, mongoose_1.model)("File", fileSchema, "Files");
+const FileModel = (0, mongoose_1.model)("Files", fileSchema, "Files");
 exports.default = FileModel;

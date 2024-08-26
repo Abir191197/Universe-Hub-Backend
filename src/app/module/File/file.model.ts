@@ -16,6 +16,6 @@ const fileSchema = new Schema<IFile>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-const FileModel = model<IFile>("File", fileSchema, "Files");
+const FileModel = model<IFile>("Files", fileSchema, "Files");
 
 export default FileModel;
