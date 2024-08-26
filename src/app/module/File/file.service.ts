@@ -4,7 +4,6 @@ import { sendImageToCloud } from "../../utils/sendImageToCloud";
 import { IFile } from "./file.interface";
 import FileModel from "./file.model";
 
-
 //create File into DATABASE
 
 // const createFileUploadIntoDB = async (payload: {
@@ -19,10 +18,7 @@ import FileModel from "./file.model";
 //    const fileName = fileInformation.originalname;
 //    const path = fileInformation.path;
 
-
 //   const {secure_url,resource_type,bytes} =await sendImageToCloud(fileName,path);
-
- 
 
 //   const newFile: Partial<IFile> = {
 //     uploadedBy: authUserInformation.name,
@@ -40,7 +36,6 @@ import FileModel from "./file.model";
 
 // Create File into DATABASE
 
-
 const createFileUploadIntoDB = async (payload: {
   authUserInformation: any;
   fileInformation: any;
@@ -50,13 +45,16 @@ const createFileUploadIntoDB = async (payload: {
   const fileName = fileInformation.originalname;
   const buffer = fileInformation.buffer;
 
-  const { secure_url, resource_type, bytes } = await sendImageToCloud(fileName, buffer);
+  const { secure_url, resource_type, bytes } = await sendImageToCloud(
+    fileName,
+    buffer
+  );
 
   const newFile: Partial<IFile> = {
-    courseName:typeInformation.courseName,
-    courseId:typeInformation.courseId,
+    courseName: typeInformation.courseName,
+    courseId: typeInformation.courseId,
     fileName: typeInformation.fileName,
-    fileDescription:typeInformation.fileDescription,
+    fileDescription: typeInformation.fileDescription,
     uploadedBy: authUserInformation.name,
     type: typeInformation.type,
     fileUrl: secure_url as string,
@@ -69,13 +67,12 @@ const createFileUploadIntoDB = async (payload: {
   return file.toObject();
 };
 
-
 //Get file details for one course
 
 const getAllFilesForCourse = async (courseId: string) => {
   try {
     // Find files associated with the given courseId
-    const files = await FileModel.find({ courseId });
+    const files = await FileModel.findOne({ courseId: courseId });
 
     return files;
   } catch (error) {
@@ -84,9 +81,7 @@ const getAllFilesForCourse = async (courseId: string) => {
   }
 };
 
-
-
-//get all file details 
+//get all file details
 const getAllFileDetailsFromDB = async () => {
   try {
     // Fetch all files from the database
@@ -99,10 +94,7 @@ const getAllFileDetailsFromDB = async () => {
   }
 };
 
-
-
 //FILE approved or status change in database
-
 
 const fileStatusChangeIntoDB = async (id: string) => {
   try {
@@ -120,18 +112,13 @@ const fileStatusChangeIntoDB = async (id: string) => {
 
     // Update the file status to "Approved"
     file.status = "Approved";
-    await file.save(); 
+    await file.save();
 
-    return file; 
+    return file;
   } catch (error) {
-    throw error; 
+    throw error;
   }
 };
-
-
-
-
-
 
 export const fileUploadService = {
   createFileUploadIntoDB,

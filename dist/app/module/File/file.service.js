@@ -65,7 +65,7 @@ const createFileUploadIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fu
 const getAllFilesForCourse = (courseId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Find files associated with the given courseId
-        const files = yield file_model_1.default.find({ courseId });
+        const files = yield file_model_1.default.findOne({ courseId: courseId });
         return files;
     }
     catch (error) {
@@ -73,7 +73,7 @@ const getAllFilesForCourse = (courseId) => __awaiter(void 0, void 0, void 0, fun
         throw error;
     }
 });
-//get all file details 
+//get all file details
 const getAllFileDetailsFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Fetch all files from the database
