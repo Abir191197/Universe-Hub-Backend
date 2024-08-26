@@ -5,7 +5,7 @@ const fileSchema = new mongoose_1.Schema({
     uploadedBy: { type: String, required: true },
     fileName: { type: String, required: true },
     fileDescription: { type: String, required: true },
-    type: { type: String, enum: ["question", "note", "lecture"], required: true },
+    type: { type: String, enum: ["Question", "Video", "Personal Note"], required: true },
     fileUrl: { type: String, required: true },
     courseId: { type: mongoose_1.Schema.Types.ObjectId, ref: "Courses", required: true },
     courseName: { type: String, required: true },
