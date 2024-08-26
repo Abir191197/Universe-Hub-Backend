@@ -72,7 +72,7 @@ const createFileUploadIntoDB = async (payload: {
 const getAllFilesForCourse = async (courseId: string) => {
   try {
     // Find files associated with the given courseId
-    const files = await FileModel.findOne({ courseId: courseId });
+    const files = await FileModel.findOne({ courseId });
 
     return files;
   } catch (error) {

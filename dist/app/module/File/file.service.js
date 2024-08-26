@@ -65,7 +65,7 @@ const createFileUploadIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fu
 const getAllFilesForCourse = (courseId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Find files associated with the given courseId
-        const files = yield file_model_1.default.findOne({ courseId: courseId });
+        const files = yield file_model_1.default.findOne({ courseId });
         return files;
     }
     catch (error) {
