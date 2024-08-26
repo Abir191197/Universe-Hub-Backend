@@ -27,13 +27,8 @@ const fileUpload = catchAsync(async (req, res) => {
 // Controller to handle request for getting all files for a course
 const getAllFileForOneCourses = catchAsync(async (req, res) => {
   // Extracting the course ID from the request parameters
-  const { courseId } = req.params;
-
-  // Validate courseId
-
-
-  // Call the service to get files for the given course
-  const result = await fileUploadService.getAllFilesForCourse(courseId);
+  const { id } = req.params;
+  const result = await fileUploadService.getAllFilesForCourse(id);
 
   // Send a successful response with the result data
   sendResponse(res, {

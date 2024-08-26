@@ -62,11 +62,11 @@ const createFileUploadIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fu
     return file.toObject();
 });
 //Get file details for one course
-const getAllFilesForCourse = (courseId) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllFilesForCourse = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Find files associated with the given courseId
-        const files = yield file_model_1.default.findOne({ courseId });
-        return files;
+        const result = yield file_model_1.default.findOne({ courseId: id });
+        return result;
     }
     catch (error) {
         // Re-throw the error to be handled by the controller or global error handler

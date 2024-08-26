@@ -36,10 +36,8 @@ const fileUpload = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 // Controller to handle request for getting all files for a course
 const getAllFileForOneCourses = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Extracting the course ID from the request parameters
-    const { courseId } = req.params;
-    // Validate courseId
-    // Call the service to get files for the given course
-    const result = yield file_service_1.fileUploadService.getAllFilesForCourse(courseId);
+    const { id } = req.params;
+    const result = yield file_service_1.fileUploadService.getAllFilesForCourse(id);
     // Send a successful response with the result data
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
