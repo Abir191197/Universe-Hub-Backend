@@ -30,9 +30,7 @@ const getAllFileForOneCourses = catchAsync(async (req, res) => {
   const { courseId } = req.params;
 
   // Validate courseId
-  if (!courseId) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'Course ID is required');
-  }
+
 
   // Call the service to get files for the given course
   const result = await fileUploadService.getAllFilesForCourse(courseId);
