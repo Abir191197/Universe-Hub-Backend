@@ -33,7 +33,7 @@ router.post(
   fileUploadController.fileUpload
 );
 
-router.get("/CourseFile",
+router.get("/CourseFile/:id",
   
   authVerify(USER_ROLE.admin, USER_ROLE.student),
 
