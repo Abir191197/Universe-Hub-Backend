@@ -17,6 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const file_service_1 = require("./file.service");
+const AppError_1 = __importDefault(require("../../errors/AppError"));
 //file upload
 const fileUpload = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const payload = {
@@ -29,6 +30,35 @@ const fileUpload = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         statusCode: http_status_1.default.OK,
         success: true,
         message: "File uploaded successfully",
+        data: result,
+    });
+}));
+//get file for course
+// Controller to handle request for getting all files for a course
+const getAllFileForOneCourses = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Extracting the course ID from the request parameters
+    const { courseId } = req.params;
+    // Validate courseId
+    if (!courseId) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Course ID is required');
+    }
+    // Call the service to get files for the given course
+    const result = yield file_service_1.fileUploadService.getAllFilesForCourse(courseId);
+    // Send a successful response with the result data
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Files retrieved successfully',
+        data: result,
+    });
+}));
+const getAllFileForAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield file_service_1.fileUploadService.getAllFileDetailsFromDB();
+    // Send a successful response with the result data
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Files retrieved successfully",
         data: result,
     });
 }));
@@ -45,5 +75,7 @@ const fileApproved = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
 }));
 exports.fileUploadController = {
     fileUpload,
-    fileApproved
+    fileApproved,
+    getAllFileForOneCourses,
+    getAllFileForAdmin,
 };

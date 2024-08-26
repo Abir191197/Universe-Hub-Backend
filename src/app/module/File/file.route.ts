@@ -33,6 +33,23 @@ router.post(
   fileUploadController.fileUpload
 );
 
+router.get("/CourseFile",
+  
+  authVerify(USER_ROLE.admin, USER_ROLE.student),
+
+  fileUploadController.getAllFileForOneCourses
+
+);
+
+
+router.get(
+  "/AllFile",
+
+  authVerify(USER_ROLE.admin, USER_ROLE.student),
+
+  fileUploadController.getAllFileForAdmin
+);
+
 
 router.put(
   "/approve/:id",

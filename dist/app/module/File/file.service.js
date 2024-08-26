@@ -47,6 +47,8 @@ const createFileUploadIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fu
     const buffer = fileInformation.buffer;
     const { secure_url, resource_type, bytes } = yield (0, sendImageToCloud_1.sendImageToCloud)(fileName, buffer);
     const newFile = {
+        courseName: typeInformation.courseName,
+        courseId: typeInformation.courseId,
         fileName: typeInformation.fileName,
         fileDescription: typeInformation.fileDescription,
         uploadedBy: authUserInformation.name,
@@ -58,6 +60,30 @@ const createFileUploadIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fu
     const file = new file_model_1.default(newFile);
     yield file.save();
     return file.toObject();
+});
+//Get file details for one course
+const getAllFilesForCourse = (courseId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Find files associated with the given courseId
+        const files = yield file_model_1.default.find({ courseId });
+        return files;
+    }
+    catch (error) {
+        // Re-throw the error to be handled by the controller or global error handler
+        throw error;
+    }
+});
+//get all file details 
+const getAllFileDetailsFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Fetch all files from the database
+        const files = yield file_model_1.default.find();
+        return files;
+    }
+    catch (error) {
+        // Re-throw the error to be handled by the controller or global error handler
+        throw error;
+    }
 });
 //FILE approved or status change in database
 const fileStatusChangeIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -82,5 +108,7 @@ const fileStatusChangeIntoDB = (id) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.fileUploadService = {
     createFileUploadIntoDB,
-    fileStatusChangeIntoDB
+    fileStatusChangeIntoDB,
+    getAllFilesForCourse,
+    getAllFileDetailsFromDB,
 };

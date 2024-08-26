@@ -53,6 +53,8 @@ const createFileUploadIntoDB = async (payload: {
   const { secure_url, resource_type, bytes } = await sendImageToCloud(fileName, buffer);
 
   const newFile: Partial<IFile> = {
+    courseName:typeInformation.courseName,
+    courseId:typeInformation.courseId,
     fileName: typeInformation.fileName,
     fileDescription:typeInformation.fileDescription,
     uploadedBy: authUserInformation.name,
@@ -66,6 +68,38 @@ const createFileUploadIntoDB = async (payload: {
   await file.save();
   return file.toObject();
 };
+
+
+//Get file details for one course
+
+const getAllFilesForCourse = async (courseId: string) => {
+  try {
+    // Find files associated with the given courseId
+    const files = await FileModel.find({ courseId });
+
+    return files;
+  } catch (error) {
+    // Re-throw the error to be handled by the controller or global error handler
+    throw error;
+  }
+};
+
+
+
+//get all file details 
+const getAllFileDetailsFromDB = async () => {
+  try {
+    // Fetch all files from the database
+    const files = await FileModel.find();
+
+    return files;
+  } catch (error) {
+    // Re-throw the error to be handled by the controller or global error handler
+    throw error;
+  }
+};
+
+
 
 //FILE approved or status change in database
 
@@ -101,5 +135,7 @@ const fileStatusChangeIntoDB = async (id: string) => {
 
 export const fileUploadService = {
   createFileUploadIntoDB,
-  fileStatusChangeIntoDB
+  fileStatusChangeIntoDB,
+  getAllFilesForCourse,
+  getAllFileDetailsFromDB,
 };

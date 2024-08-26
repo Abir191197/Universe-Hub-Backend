@@ -1,14 +1,16 @@
+import { Document, Types } from "mongoose";
 
-export interface IFile {
+export interface IFile  {
   uploadedBy: string;
-  // courseId: ObjectId;
   fileName: string;
   fileDescription: string;
   type: "question" | "note" | "lecture";
   fileUrl: string;
+  courseId: Types.ObjectId; // Ensure courseId is of type ObjectId
+  courseName: string;
   fileSize: number;
   fileType: string;
   status: "Pending" | "Approved";
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
