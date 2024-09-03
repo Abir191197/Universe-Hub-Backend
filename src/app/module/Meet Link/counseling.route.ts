@@ -1,16 +1,17 @@
 import express from "express";
 import authVerify from "../../middlewares/authVerify";
 import { USER_ROLE } from "../users/user.constant";
-import validateRequest from "../../middlewares/validateRequest";
 
 import { CounselingControllers } from "./counseling.controller";
+import validateRequest from "../../middlewares/validateRequest";
 import { CounselingValidation } from "./counseling.validation";
+
 
 const router = express.Router();
 
 router.post(
   "/createEvent",
-  authVerify(USER_ROLE.admin, USER_ROLE.counsellor),
+  authVerify(),
   validateRequest(CounselingValidation.CounselingValidationSchema),
   CounselingControllers.createCounseling
 );
@@ -23,17 +24,16 @@ router.get(
 );
 
 
-router.post(
-  "/meetCreate",
-  authVerify(USER_ROLE.admin, USER_ROLE.counsellor),
-  CounselingControllers.createMeetLink
+//Booking by student
 
-
-
+router.put(
+  "/:id",
+  authVerify(USER_ROLE.admin, USER_ROLE.counsellor, USER_ROLE.student),
+  CounselingControllers.BookedEvent
 );
 
 
 
 
 
-export const MeetRoutes = router;
+export const CounsellingRoute = router;

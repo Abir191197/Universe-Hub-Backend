@@ -16,10 +16,12 @@ const createCounseling = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Counseling Event successfully",
+    message: "Counseling Event Create successfully",
     data: result,
   });
 });
+
+
 
 
 //get Event Full link from DB
@@ -36,10 +38,20 @@ const getAllEvent = catchAsync(async (req, res) => {
 });
 
 
-//Create Google meet link
+//Booking by Student
 
-const createMeetLink = catchAsync(async (req, res) => {
+const BookedEvent = catchAsync(async (req, res) => {
   
+  const { id } = req.params;
+  const user = req.user; 
+  const result = await CounselingServices.EventBookingConfirmIntoDB(id, user);
+
+sendResponse(res, {
+  statusCode: httpStatus.OK,
+  success: true,
+  message: "Event Booked  succesfully",
+  data: result,
+});
 
 
 })
@@ -47,8 +59,18 @@ const createMeetLink = catchAsync(async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
 export const CounselingControllers = {
   createCounseling,
   getAllEvent,
-  createMeetLink,
+  BookedEvent,
 };

@@ -27,7 +27,7 @@ const createCounseling = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Counseling Event successfully",
+        message: "Counseling Event Create successfully",
         data: result,
     });
 }));
@@ -41,11 +41,20 @@ const getAllEvent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         data: result,
     });
 }));
-//Create Google meet link
-const createMeetLink = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//Booking by Student
+const BookedEvent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const user = req.user;
+    const result = yield counseling_service_1.CounselingServices.EventBookingConfirmIntoDB(id, user);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Event Booked  succesfully",
+        data: result,
+    });
 }));
 exports.CounselingControllers = {
     createCounseling,
     getAllEvent,
-    createMeetLink,
+    BookedEvent,
 };

@@ -15,4 +15,11 @@ exports.default = {
     bcrypt_salt_rounds: process.env.bcrypt_salt_rounds,
     access_key: process.env.access_secret,
     refresh_key: process.env.refresh_secret,
+    STORE_ID: process.env.STORE_ID,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    SESSION_SECRET: process.env.SESSION_SECRET,
+    SIGNATURE_KEY: process.env.SIGNATURE_KEY,
+    PAYMENT_URL: process.env.PAYMENT_URL,
+    PAYMENT_VERIFY_URL: process.env.PAYMENT_VERIFY_URL,
 };

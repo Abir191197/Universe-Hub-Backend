@@ -13,7 +13,6 @@ const handleValidationError_1 = __importDefault(require("../errors/handleValidat
 const handleZodError_1 = __importDefault(require("../errors/handleZodError"));
 const config_1 = __importDefault(require("../../config"));
 const globalErrorHandler = (err, req, res, next) => {
-    console.log(err.statusCode);
     //setting default values
     let statusCode = 500;
     let message = "Something went wrong!";
