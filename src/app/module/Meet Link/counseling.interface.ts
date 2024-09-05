@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 // Define the interface for the Counseling document
 export interface ICounseling {
+  CreateByEmail: string;
   CreateBy: string;
   BookedBy?: mongoose.Types.ObjectId; // Optional
   BookedByName?: string; // Optional
@@ -16,7 +17,8 @@ export interface ICounseling {
   StudyRoomNumber: string;
   MeetLink?: string; // Optional; only required if Type is "online"
   isPayment?: boolean; // Optional; if omitted, default to false
-  isBooked?: boolean; // Optional; if omitted, default to false
+  isBooked?: boolean;
+  isCompleted?: boolean;// Optional; if omitted, default to false
   createdAt: Date;
   updatedAt: Date;
 }

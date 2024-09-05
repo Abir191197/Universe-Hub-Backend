@@ -41,6 +41,19 @@ const getAllEvent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         data: result,
     });
 }));
+//get event by who have owner
+const getCounsellingByWhoOwner = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = {
+        authUserInformation: req.user,
+    };
+    const result = yield counseling_service_1.CounselingServices.getOwnerCounsellingFromDB(payload);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Event are retrieved for owner  succesfully",
+        data: result,
+    });
+}));
 //Booking by Student
 const BookedEvent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -53,8 +66,33 @@ const BookedEvent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         data: result,
     });
 }));
+//delete counselling controller
+const deleteCounselling = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield counseling_service_1.CounselingServices.EventDeleteFromDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Event deleted successfully",
+        data: result,
+    });
+}));
+// Controller to handle the request
+const CompleteCounselling = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield counseling_service_1.CounselingServices.CompleteCounsellingUpdatedIntoBD(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Counseling session marked as completed successfully",
+        data: result,
+    });
+}));
 exports.CounselingControllers = {
     createCounseling,
     getAllEvent,
     BookedEvent,
+    getCounsellingByWhoOwner,
+    deleteCounselling,
+    CompleteCounselling,
 };

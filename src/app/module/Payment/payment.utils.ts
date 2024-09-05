@@ -4,7 +4,7 @@ import config from "../../../config";
 // Define the type for payment data
 export interface PaymentData {
   id: string;
-  amount: number;
+  amount?: number|undefined;
   UserName: string;
   UserEmail: string;
   UserPhone: string;

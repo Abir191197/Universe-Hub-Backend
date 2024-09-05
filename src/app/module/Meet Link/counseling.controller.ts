@@ -38,6 +38,32 @@ const getAllEvent = catchAsync(async (req, res) => {
 });
 
 
+
+
+//get event by who have owner
+
+
+
+
+const getCounsellingByWhoOwner = catchAsync(async (req, res) => {
+const payload = {
+   
+   authUserInformation: req.user,
+  
+ };
+
+  const result = await CounselingServices.getOwnerCounsellingFromDB(payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Event are retrieved for owner  succesfully",
+    data: result,
+  });
+});
+
+
+
 //Booking by Student
 
 const BookedEvent = catchAsync(async (req, res) => {
@@ -57,12 +83,37 @@ sendResponse(res, {
 })
 
 
+//delete counselling controller
+
+const deleteCounselling = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await CounselingServices.EventDeleteFromDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Event deleted successfully",
+    data: result,
+  });
+});
 
 
 
 
+// Controller to handle the request
+const CompleteCounselling = catchAsync(async (req, res) => {
+  const { id } = req.params;
 
+  const result = await CounselingServices.CompleteCounsellingUpdatedIntoBD(id);
 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Counseling session marked as completed successfully",
+    data: result,
+  });
+});
 
 
 
@@ -73,4 +124,7 @@ export const CounselingControllers = {
   createCounseling,
   getAllEvent,
   BookedEvent,
+  getCounsellingByWhoOwner,
+  deleteCounselling,
+  CompleteCounselling,
 };

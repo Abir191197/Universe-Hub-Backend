@@ -31,9 +31,11 @@ const createCounselingIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fu
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User Not Found");
         }
         const createByName = isUserExist.name;
+        const CreateByEmail = isUserExist.email;
         // Prepare data for insertion
         const data = {
             CreateBy: createByName,
+            CreateByEmail: CreateByEmail,
             Description: EventInformation.Description,
             TopicName: EventInformation.TopicName,
             Duration: EventInformation.Duration,
@@ -58,11 +60,35 @@ const createCounselingIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fu
 //get ALl Event From DB and sent it  Controllers
 const getCounsellingFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield counseling_model_1.default.find();
+        // Retrieve counseling sessions where isCompleted is false
+        const result = yield counseling_model_1.default.find({ isCompleted: false });
         return result;
     }
     catch (error) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to retrieved Counseling");
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to retrieve Counseling");
+    }
+});
+//get one user counselling data
+const getOwnerCounsellingFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { authUserInformation } = payload;
+    try {
+        // Check if the user exists in the database
+        const isUserExist = yield users_model_1.default.findOne({
+            email: authUserInformation.email,
+        });
+        if (!isUserExist) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User Not Found");
+        }
+        // Retrieve counselling data created by this user
+        const counsellingData = yield counseling_model_1.default.find({
+            CreateByEmail: authUserInformation.email,
+        });
+        // Return the counselling data
+        return counsellingData;
+    }
+    catch (error) {
+        console.error('Error in getOwnerCounsellingFromDB:', error); // Logging the error for debugging
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to retrieve Counselling");
     }
 });
 //Booked Counselling by student
@@ -91,7 +117,7 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
         // Prepare payment data
         const paymentData = {
             id,
-            CashAmount: booking.CashAmount,
+            amount: booking.CashAmount,
             UserName: isUserExist.name,
             UserEmail: isUserExist.email,
             UserPhone: isUserExist.phone,
@@ -133,8 +159,42 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
         }
     }
 });
+//Event DELETE
+const EventDeleteFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Delete counseling session by id
+        const result = yield counseling_model_1.default.findByIdAndDelete(id);
+        if (!result) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Counseling session not found");
+        }
+        return result;
+    }
+    catch (error) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to delete Counseling");
+    }
+});
+//Event Complete
+const CompleteCounsellingUpdatedIntoBD = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Mark the counseling session as completed
+        const result = yield counseling_model_1.default.findByIdAndUpdate(id, // First argument is the ID
+        { isCompleted: true }, // Second argument is the update object
+        { new: true } // Returns the updated document
+        );
+        if (!result) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Counseling session not found");
+        }
+        return result;
+    }
+    catch (error) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to update Counseling session");
+    }
+});
 exports.CounselingServices = {
     createCounselingIntoDB,
     getCounsellingFromDB,
     EventBookingConfirmIntoDB,
+    getOwnerCounsellingFromDB,
+    EventDeleteFromDB,
+    CompleteCounsellingUpdatedIntoBD,
 };

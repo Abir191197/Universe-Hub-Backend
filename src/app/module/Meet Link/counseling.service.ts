@@ -6,7 +6,6 @@ import AppError from "../../errors/AppError";
 import { PaymentData, sendPaymentRequest } from "../Payment/payment.utils";
 import UserModel from "../users/users.model";
 import CounselingModel from "./counseling.model";
-import { ICounseling } from "./counseling.interface";
 
 //createCounselingDataIntoDB
 
@@ -24,10 +23,11 @@ const createCounselingIntoDB = async (payload: { authUserInformation: any; Event
     }
 
     const createByName = isUserExist.name;
-
+    const CreateByEmail = isUserExist.email;
     // Prepare data for insertion
     const data = {
       CreateBy: createByName,
+      CreateByEmail:CreateByEmail ,
       Description: EventInformation.Description,
       TopicName: EventInformation.TopicName,
       Duration: EventInformation.Duration,
@@ -55,15 +55,54 @@ const createCounselingIntoDB = async (payload: { authUserInformation: any; Event
 
 const getCounsellingFromDB = async () => {
   try {
-    const result = await CounselingModel.find();
+    // Retrieve counseling sessions where isCompleted is false
+    const result = await CounselingModel.find({ isCompleted: false });
+
     return result;
   } catch (error) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      "Failed to retrieved Counseling"
+      "Failed to retrieve Counseling"
     );
   }
 };
+
+
+
+//get one user counselling data
+
+const getOwnerCounsellingFromDB = async (payload: { authUserInformation: any }) => {
+  const { authUserInformation } = payload;
+  
+  try {
+    // Check if the user exists in the database
+    const isUserExist = await UserModel.findOne({
+      email: authUserInformation.email,
+    });
+
+    if (!isUserExist) {
+      throw new AppError(httpStatus.BAD_REQUEST, "User Not Found");
+    }
+
+    // Retrieve counselling data created by this user
+    const counsellingData = await CounselingModel.find({
+      CreateByEmail: authUserInformation.email,
+    });
+
+    // Return the counselling data
+    return counsellingData;
+
+  } catch (error) {
+    console.error('Error in getOwnerCounsellingFromDB:', error); // Logging the error for debugging
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Failed to retrieve Counselling"
+    );
+  }
+}
+
+
+
 
 //Booked Counselling by student
 const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
@@ -96,7 +135,7 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
     // Prepare payment data
     const paymentData: PaymentData = {
       id,
-      CashAmount?: booking.CashAmount,
+      amount: booking.CashAmount,
       UserName: isUserExist.name,
       UserEmail: isUserExist.email,
       UserPhone: isUserExist.phone,
@@ -141,8 +180,62 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
   }
 };
 
+
+//Event DELETE
+
+
+
+const EventDeleteFromDB = async (id: string) => {
+  try {
+    // Delete counseling session by id
+    const result = await CounselingModel.findByIdAndDelete(id);
+
+    if (!result) {
+      throw new AppError(httpStatus.NOT_FOUND, "Counseling session not found");
+    }
+
+    return result;
+  } catch (error) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Failed to delete Counseling"
+    );
+  }
+};
+
+//Event Complete
+
+const CompleteCounsellingUpdatedIntoBD = async (id: string) => {
+  try {
+    // Mark the counseling session as completed
+    const result = await CounselingModel.findByIdAndUpdate(
+      id, // First argument is the ID
+      { isCompleted: true }, // Second argument is the update object
+      { new: true } // Returns the updated document
+    );
+
+    if (!result) {
+      throw new AppError(httpStatus.NOT_FOUND, "Counseling session not found");
+    }
+
+    return result;
+  } catch (error) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Failed to update Counseling session");
+  }
+};
+
+
+
+
+
+
+
+
 export const CounselingServices = {
   createCounselingIntoDB,
   getCounsellingFromDB,
   EventBookingConfirmIntoDB,
+  getOwnerCounsellingFromDB,
+  EventDeleteFromDB,
+  CompleteCounsellingUpdatedIntoBD,
 };

@@ -4,6 +4,8 @@ const mongoose_1 = require("mongoose");
 const CourseSchema = new mongoose_1.Schema({
     courseName: { type: String, required: true },
     files: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Files" }],
+    Description: { type: String },
+    imageUrl: { type: String },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });

@@ -8,6 +8,7 @@ import { CounselingValidation } from "./counseling.validation";
 
 
 const router = express.Router();
+//create Counselling
 
 router.post(
   "/createEvent",
@@ -16,12 +17,22 @@ router.post(
   CounselingControllers.createCounseling
 );
 
-
+//get all  counselling
 router.get(
   "/",
   authVerify(USER_ROLE.admin, USER_ROLE.counsellor,USER_ROLE.student),
   CounselingControllers.getAllEvent
 );
+
+
+//get only who have counselling that show
+
+router.get(
+  "/whoCounselling",
+  authVerify(USER_ROLE.admin, USER_ROLE.counsellor, USER_ROLE.student),
+  CounselingControllers.getCounsellingByWhoOwner
+);
+
 
 
 //Booking by student
@@ -32,8 +43,20 @@ router.put(
   CounselingControllers.BookedEvent
 );
 
+//delete  counselling 
+
+router.delete(
+  "/:id",
+  authVerify(USER_ROLE.admin, USER_ROLE.counsellor),
+  CounselingControllers.deleteCounselling
+);
 
 
-
+// Route to mark counseling as completed
+router.put(
+  "/markCompleted/:id",
+  authVerify(USER_ROLE.admin, USER_ROLE.counsellor),
+  CounselingControllers.CompleteCounselling
+);
 
 export const CounsellingRoute = router;

@@ -4,6 +4,7 @@ import { ICounseling } from "./counseling.interface";
 // Define the Mongoose schema
 const CounselingSchema: Schema<ICounseling> = new Schema<ICounseling>({
   CreateBy: { type: String, required: true },
+  CreateByEmail: { type: String, required: true },
   BookedBy: { type: Schema.Types.ObjectId, ref: "Users", default: null },
   BookedByName: { type: String, default: null },
   BookedByPhone: { type: String, default: null },
@@ -22,6 +23,7 @@ const CounselingSchema: Schema<ICounseling> = new Schema<ICounseling>({
   StudyRoomNumber: { type: String, default: null },
   isPayment: { type: Boolean, default: false },
   isBooked: { type: Boolean, default: false },
+  isCompleted:{ type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

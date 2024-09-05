@@ -6,6 +6,7 @@ const zod_1 = require("zod");
 const CounselingValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
         CreateBy: zod_1.z.string().optional(),
+        CreateByEmail: zod_1.z.string().optional(),
         BookedBy: zod_1.z
             .string()
             .refine((val) => /^[a-f\d]{24}$/i.test(val), {
@@ -31,6 +32,7 @@ const CounselingValidationSchema = zod_1.z.object({
         isPayment: zod_1.z.boolean().optional(),
         StudyRoomNumber: zod_1.z.string().optional(),
         isBooked: zod_1.z.boolean().optional(),
+        isCompleted: zod_1.z.boolean().optional(),
         createdAt: zod_1.z.date().optional(), // Expecting a Date object
         updatedAt: zod_1.z.date().optional(), // Expecting a Date object
     }),

@@ -27,6 +27,7 @@ const mongoose_1 = __importStar(require("mongoose"));
 // Define the Mongoose schema
 const CounselingSchema = new mongoose_1.Schema({
     CreateBy: { type: String, required: true },
+    CreateByEmail: { type: String, required: true },
     BookedBy: { type: mongoose_1.Schema.Types.ObjectId, ref: "Users", default: null },
     BookedByName: { type: String, default: null },
     BookedByPhone: { type: String, default: null },
@@ -45,6 +46,7 @@ const CounselingSchema = new mongoose_1.Schema({
     StudyRoomNumber: { type: String, default: null },
     isPayment: { type: Boolean, default: false },
     isBooked: { type: Boolean, default: false },
+    isCompleted: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });

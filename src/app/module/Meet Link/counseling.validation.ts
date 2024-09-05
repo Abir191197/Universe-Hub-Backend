@@ -4,7 +4,7 @@ import { z } from "zod";
 const CounselingValidationSchema = z.object({
   body: z.object({
     CreateBy: z.string().optional(),
-
+    CreateByEmail: z.string().optional(),
     BookedBy: z
       .string()
       .refine((val) => /^[a-f\d]{24}$/i.test(val), {
@@ -32,6 +32,7 @@ const CounselingValidationSchema = z.object({
     isPayment: z.boolean().optional(),
     StudyRoomNumber: z.string().optional(),
     isBooked: z.boolean().optional(),
+    isCompleted: z.boolean().optional(),
     createdAt: z.date().optional(), // Expecting a Date object
     updatedAt: z.date().optional(), // Expecting a Date object
   }),
