@@ -152,6 +152,7 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
         UserAddress: isUserExist.address,
       };
 
+     
       let paymentSession;
       try {
         paymentSession = await sendPaymentRequest(paymentData);
