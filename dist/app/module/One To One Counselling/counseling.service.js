@@ -96,6 +96,7 @@ const getOwnerCounsellingFromDB = (payload) => __awaiter(void 0, void 0, void 0,
 //booked
 const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield mongoose_1.default.startSession();
+    let result;
     try {
         session.startTransaction();
         // Fetch the booking record
@@ -138,34 +139,29 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
             catch (error) {
                 console.error("Failed to create payment session:", error);
                 yield session.abortTransaction();
-                session.endSession();
                 throw new AppError_1.default(500, "Failed to initiate payment session.");
             }
             // Save booking after initiating payment
             yield booking.save({ session });
             yield session.commitTransaction();
-            session.endSession();
-            return paymentSession;
+            result = paymentSession;
         }
         else {
             // If cash amount is 0, confirm booking directly
             booking.isPayment = true;
             yield booking.save({ session });
             yield session.commitTransaction();
-            session.endSession();
-            return { message: "Booking confirmed successfully" };
+            result = { message: "Booking confirmed successfully" };
         }
     }
     catch (error) {
         yield session.abortTransaction();
-        session.endSession();
-        if (error instanceof AppError_1.default) {
-            throw error;
-        }
-        else {
-            throw new AppError_1.default(500, "Internal server error");
-        }
+        throw error; // Let the error propagate up
     }
+    finally {
+        session.endSession();
+    }
+    return result;
 });
 //Event DELETE
 const EventDeleteFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {

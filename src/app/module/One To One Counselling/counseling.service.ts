@@ -109,6 +109,7 @@ const getOwnerCounsellingFromDB = async (payload: { authUserInformation: any }) 
 
 const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
   const session: ClientSession = await mongoose.startSession();
+  let result;
 
   try {
     session.startTransaction();
@@ -138,55 +139,48 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
     booking.BookedByEmail = isUserExist.email;
     booking.BookedByPhone = isUserExist.phone;
 
-   if (booking.CashAmount !== undefined && booking.CashAmount > 0) {
-     // If payment is required, set isPayment to false initially
-     booking.isPayment = false;
+    if (booking.CashAmount !== undefined && booking.CashAmount > 0) {
+      // If payment is required, set isPayment to false initially
+      booking.isPayment = false;
 
-     // Prepare payment data
-     const paymentData: PaymentData = {
-       id,
-       amount: booking.CashAmount,
-       UserName: isUserExist.name,
-       UserEmail: isUserExist.email,
-       UserPhone: isUserExist.phone,
-       UserAddress: isUserExist.address,
-     };
+      // Prepare payment data
+      const paymentData: PaymentData = {
+        id,
+        amount: booking.CashAmount,
+        UserName: isUserExist.name,
+        UserEmail: isUserExist.email,
+        UserPhone: isUserExist.phone,
+        UserAddress: isUserExist.address,
+      };
 
-     let paymentSession;
-     try {
-       paymentSession = await sendPaymentRequest(paymentData);
-     } catch (error) {
-       console.error("Failed to create payment session:", error);
-       await session.abortTransaction();
-       session.endSession();
-       throw new AppError(500, "Failed to initiate payment session.");
-     }
+      let paymentSession;
+      try {
+        paymentSession = await sendPaymentRequest(paymentData);
+      } catch (error) {
+        console.error("Failed to create payment session:", error);
+        await session.abortTransaction();
+        throw new AppError(500, "Failed to initiate payment session.");
+      }
 
-     // Save booking after initiating payment
-     await booking.save({ session });
-     await session.commitTransaction();
-     session.endSession();
-
-     return paymentSession;
-   } else {
-     // If cash amount is 0, confirm booking directly
-     booking.isPayment = true;
-     await booking.save({ session });
-     await session.commitTransaction();
-     session.endSession();
-
-     return { message: "Booking confirmed successfully" };
-   }
+      // Save booking after initiating payment
+      await booking.save({ session });
+      await session.commitTransaction();
+      result = paymentSession;
+    } else {
+      // If cash amount is 0, confirm booking directly
+      booking.isPayment = true;
+      await booking.save({ session });
+      await session.commitTransaction();
+      result = { message: "Booking confirmed successfully" };
+    }
   } catch (error) {
     await session.abortTransaction();
+    throw error; // Let the error propagate up
+  } finally {
     session.endSession();
-
-    if (error instanceof AppError) {
-      throw error;
-    } else {
-      throw new AppError(500, "Internal server error");
-    }
   }
+
+  return result;
 };
 
 
