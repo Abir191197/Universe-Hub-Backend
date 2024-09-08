@@ -84,10 +84,12 @@ const getOwnerCounsellingFromDB = async (payload: { authUserInformation: any }) 
       throw new AppError(httpStatus.BAD_REQUEST, "User Not Found");
     }
 
-    // Retrieve counselling data created by this user
-    const counsellingData = await CounselingModel.find({
-      CreateByEmail: authUserInformation.email,
-    });
+   const counsellingData = await CounselingModel.find({
+     $or: [
+       { CreateByEmail: authUserInformation.email },
+       { BookedByEmail: authUserInformation.email },
+     ],
+   });
 
     // Return the counselling data
     return counsellingData;
@@ -103,28 +105,25 @@ const getOwnerCounsellingFromDB = async (payload: { authUserInformation: any }) 
 
 
 
+//booked
 
-//Booked Counselling by student
 const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
-  // Start a session
   const session: ClientSession = await mongoose.startSession();
 
   try {
-    // Start transaction
     session.startTransaction();
 
-    // Check if the booking exists
+    // Fetch the booking record
     const booking = await CounselingModel.findById(id).session(session).exec();
     if (!booking) {
       throw new AppError(404, "Booking not found");
     }
 
-    // Check if the booking is already confirmed or booked
     if (booking.isBooked) {
       throw new AppError(400, "Booking is already confirmed");
     }
 
-    // Check if the user exists
+    // Fetch the user
     const isUserExist = await UserModel.findOne({ email: user.email })
       .session(session)
       .exec();
@@ -132,53 +131,64 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
       throw new AppError(404, "User not found");
     }
 
-    // Prepare payment data
-    const paymentData: PaymentData = {
-      id,
-      amount: booking.CashAmount,
-      UserName: isUserExist.name,
-      UserEmail: isUserExist.email,
-      UserPhone: isUserExist.phone,
-      UserAddress: isUserExist.address,
-    };
-
-    // Initiate payment session
-    let paymentSession;
-    try {
-      paymentSession = await sendPaymentRequest(paymentData);
-    } catch (error) {
-      console.error("Failed to create payment session:", error);
-      await session.abortTransaction(); // Rollback transaction
-      throw new AppError(500, "Failed to initiate payment session.");
-    }
-
-    // Update the booking status
+    // Update booking status
     booking.isBooked = true;
-    booking.BookedBy = isUserExist._id; // Assuming the user ID is used
+    booking.BookedBy = isUserExist._id;
     booking.BookedByName = isUserExist.name;
+    booking.BookedByEmail = isUserExist.email;
     booking.BookedByPhone = isUserExist.phone;
-    await booking.save({ session });
 
-    // Commit the transaction
-    await session.commitTransaction();
-    session.endSession();
+   if (booking.CashAmount !== undefined && booking.CashAmount > 0) {
+     // If payment is required, set isPayment to false initially
+     booking.isPayment = false;
 
-    // Return the payment session to the frontend
-    return paymentSession;
+     // Prepare payment data
+     const paymentData: PaymentData = {
+       id,
+       amount: booking.CashAmount,
+       UserName: isUserExist.name,
+       UserEmail: isUserExist.email,
+       UserPhone: isUserExist.phone,
+       UserAddress: isUserExist.address,
+     };
+
+     let paymentSession;
+     try {
+       paymentSession = await sendPaymentRequest(paymentData);
+     } catch (error) {
+       console.error("Failed to create payment session:", error);
+       await session.abortTransaction();
+       session.endSession();
+       throw new AppError(500, "Failed to initiate payment session.");
+     }
+
+     // Save booking after initiating payment
+     await booking.save({ session });
+     await session.commitTransaction();
+     session.endSession();
+
+     return paymentSession;
+   } else {
+     // If cash amount is 0, confirm booking directly
+     booking.isPayment = true;
+     await booking.save({ session });
+     await session.commitTransaction();
+     session.endSession();
+
+     return { message: "Booking confirmed successfully" };
+   }
   } catch (error) {
-    // Abort the transaction in case of error
     await session.abortTransaction();
     session.endSession();
 
-    // Ensure AppError instances are properly thrown
     if (error instanceof AppError) {
       throw error;
     } else {
-      // Convert non-AppError errors to AppError
       throw new AppError(500, "Internal server error");
     }
   }
 };
+
 
 
 //Event DELETE

@@ -26,7 +26,23 @@ router.delete(
 );
 
 router.get("/:id", authVerify(USER_ROLE.admin, USER_ROLE.student),
-courseControllers.getSingleCourse);
+  courseControllers.getSingleCourse);
+
+
+
+//Course Delete Only Admin
+
+
+router.delete(
+  "/CourseDeleteForAdmin/:id",
+  authVerify(USER_ROLE.admin),
+  courseControllers.removeCourseFromDatabase
+);
+
+
+
+
+
 
 
 

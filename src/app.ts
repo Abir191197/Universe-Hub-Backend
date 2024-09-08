@@ -17,19 +17,18 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Allow multiple origins for CORS
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://universe-hub.vercel.app",
-];
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://universe-hub.vercel.app",
+//   "http://localhost:5000/",
+// ];
+
 const corsOptions = {
-  origin: (origin: any, callback: any) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: ["http://localhost:5173", "https://universe-hub.vercel.app"],
   credentials: true,
+  methods: "GET,POST,PUT,DELETE",
+  optionsSuccessStatus: 200,
+  allowedHeaders: "Content-Type, Authorization",
 };
 
 app.use(cors(corsOptions));

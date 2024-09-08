@@ -1,13 +1,18 @@
 import { readFileSync } from "fs";
 import { join } from "path";
-import CounselingModel from "../Meet Link/counseling.model";
-import { verifyPayment } from "./payment.utils";
 
-const confirmationService = async (id: string, status: string) => {
+import { verifyPayment } from "./payment.utils";
+import CounselingModel from "../One To One Counselling/counseling.model";
+
+
+const confirmationService = async (bookingId: string, status: string) => {
+
+  console.log(bookingId);
+  console.log(status);
   try {
     // Verify the payment status using the transaction/order ID
-    const verifyResponse = await verifyPayment(id);
-
+    const verifyResponse = await verifyPayment(bookingId);
+console.log(verifyResponse);
     let statusMessage;
     let templateFile;
 
@@ -17,18 +22,26 @@ const confirmationService = async (id: string, status: string) => {
       templateFile = "ConfirmationSuccess.html";
 
       // Update the payment status in the database
-      await CounselingModel.findOneAndUpdate({ id }, { isPayment: true });
+      await CounselingModel.findOneAndUpdate(
+        { _id: bookingId },
+        { isPayment: true }
+      );
     } else if (verifyResponse.pay_status === "Failed") {
       statusMessage = "Payment failed";
       templateFile = "ConfirmationFailure.html";
 
       // Update the payment status in the database
       const result = await CounselingModel.findOneAndUpdate(
-        { id },
-        { isPayment: false }
+        { _id:bookingId },
+        {
+          isPayment: false,
+          isBooked: false,
+          BookedBy: null,
+          BookedByName: null,
+          BookedByPhone: null,
+          BookedByEmail: null,
+        }
       );
-
-      
     } else {
       throw new Error("Unexpected payment status or response");
     }
@@ -53,9 +66,6 @@ const confirmationService = async (id: string, status: string) => {
   }
 };
 
-
-
 export const paymentServices = {
   confirmationService,
-
 };

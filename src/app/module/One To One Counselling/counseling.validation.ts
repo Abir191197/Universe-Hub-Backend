@@ -12,6 +12,7 @@ const CounselingValidationSchema = z.object({
       })
       .nullable()
       .optional(),
+    BookedByEmail: z.string().optional(),
     BookedByName: z.string().optional(),
     BookedByPhone: z.string().optional(),
     TopicName: z.string().min(1, { message: "Topic name is required" }),

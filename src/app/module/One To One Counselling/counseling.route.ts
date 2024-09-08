@@ -2,10 +2,9 @@ import express from "express";
 import authVerify from "../../middlewares/authVerify";
 import { USER_ROLE } from "../users/user.constant";
 
-import { CounselingControllers } from "./counseling.controller";
 import validateRequest from "../../middlewares/validateRequest";
+import { CounselingControllers } from "./counseling.controller";
 import { CounselingValidation } from "./counseling.validation";
-
 
 const router = express.Router();
 //create Counselling
@@ -20,10 +19,9 @@ router.post(
 //get all  counselling
 router.get(
   "/",
-  authVerify(USER_ROLE.admin, USER_ROLE.counsellor,USER_ROLE.student),
+  authVerify(USER_ROLE.admin, USER_ROLE.counsellor, USER_ROLE.student),
   CounselingControllers.getAllEvent
 );
-
 
 //get only who have counselling that show
 
@@ -33,17 +31,15 @@ router.get(
   CounselingControllers.getCounsellingByWhoOwner
 );
 
-
-
 //Booking by student
 
 router.put(
-  "/:id",
+  "/EventBooked/:id",
   authVerify(USER_ROLE.admin, USER_ROLE.counsellor, USER_ROLE.student),
   CounselingControllers.BookedEvent
 );
 
-//delete  counselling 
+//delete  counselling
 
 router.delete(
   "/:id",
@@ -51,12 +47,13 @@ router.delete(
   CounselingControllers.deleteCounselling
 );
 
-
 // Route to mark counseling as completed
 router.put(
   "/markCompleted/:id",
   authVerify(USER_ROLE.admin, USER_ROLE.counsellor),
   CounselingControllers.CompleteCounselling
 );
+
+
 
 export const CounsellingRoute = router;

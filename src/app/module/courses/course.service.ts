@@ -75,7 +75,7 @@ const createCourseInProfileIntoDB = async (payload: {
 
 //remove course from student profile
 
-const removeCourseFromProfileInDB = async (payload: {
+const removeCourseFromProfileInDB = async ( payload: {
   id: string;
   authInformation: JwtPayload;
 }) => {
@@ -101,11 +101,6 @@ const removeCourseFromProfileInDB = async (payload: {
 };
 
 
-
-
-
-
-
 // Get single course find from Database logic
 
 const getSingleCourseFromDB = async (id: string) => {
@@ -124,6 +119,24 @@ const getSingleCourseFromDB = async (id: string) => {
   }
 };
 
+//Course Delete For Admin
+
+
+
+const removeCourseFromServer = async (id: string) => {
+  console.log(id);
+  try {
+    const result = await CourseModel.findByIdAndDelete(id);
+
+    if (!result) {
+      throw new AppError(httpStatus.NOT_FOUND, "Course not found");
+    }
+
+    return result;
+  } catch (error) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Failed to delete Course");
+  }
+};
 
 
 
@@ -134,4 +147,5 @@ export const courseService = {
   createCourseInProfileIntoDB,
   getSingleCourseFromDB,
   removeCourseFromProfileInDB,
+  removeCourseFromServer,
 };

@@ -27,7 +27,7 @@ const CourseCreate = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
-//get course and search ,filter, sort,  pagination 
+//get course and search ,filter, sort,  pagination
 const getAllCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield course_service_1.courseService.getAllCourserFromDB(req.query);
     (0, sendResponse_1.default)(res, {
@@ -39,8 +39,12 @@ const getAllCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
 }));
 //add course in  student profile
 const addCourseInPersonalProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { id } = req.params;
-    const authInformation = req.user;
+    const authInformation = (_a = req.user) !== null && _a !== void 0 ? _a : null;
+    if (authInformation === null) {
+        throw new Error("Authentication information is missing.");
+    }
     // Creating the payload object
     const payload = {
         id,
@@ -54,10 +58,14 @@ const addCourseInPersonalProfile = (0, catchAsync_1.default)((req, res) => __awa
         data: result,
     });
 }));
-//remove course from user profile 
+//remove course from user profile
 const removeCourseFromPersonalProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { id } = req.params;
-    const authInformation = req.user;
+    const authInformation = (_a = req.user) !== null && _a !== void 0 ? _a : null;
+    if (authInformation === null) {
+        throw new Error("Authentication information is missing.");
+    }
     const payload = {
         id,
         authInformation,
@@ -81,10 +89,22 @@ const getSingleCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0
         data: result,
     });
 }));
+//Course Delete From Database ONLY ADmin
+const removeCourseFromDatabase = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield course_service_1.courseService.removeCourseFromServer(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Course removed successfully from Server",
+        data: result,
+    });
+}));
 exports.courseControllers = {
     CourseCreate,
     getAllCourse,
     addCourseInPersonalProfile,
     getSingleCourse,
     removeCourseFromPersonalProfile,
+    removeCourseFromDatabase,
 };

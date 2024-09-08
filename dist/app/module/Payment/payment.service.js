@@ -15,12 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.paymentServices = void 0;
 const fs_1 = require("fs");
 const path_1 = require("path");
-const counseling_model_1 = __importDefault(require("../Meet Link/counseling.model"));
 const payment_utils_1 = require("./payment.utils");
-const confirmationService = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
+const counseling_model_1 = __importDefault(require("../One To One Counselling/counseling.model"));
+const confirmationService = (bookingId, status) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(bookingId);
+    console.log(status);
     try {
         // Verify the payment status using the transaction/order ID
-        const verifyResponse = yield (0, payment_utils_1.verifyPayment)(id);
+        const verifyResponse = yield (0, payment_utils_1.verifyPayment)(bookingId);
+        console.log(verifyResponse);
         let statusMessage;
         let templateFile;
         // Determine status message and template based on verification response
@@ -28,13 +31,20 @@ const confirmationService = (id, status) => __awaiter(void 0, void 0, void 0, fu
             statusMessage = "Payment successful";
             templateFile = "ConfirmationSuccess.html";
             // Update the payment status in the database
-            yield counseling_model_1.default.findOneAndUpdate({ id }, { isPayment: true });
+            yield counseling_model_1.default.findOneAndUpdate({ _id: bookingId }, { isPayment: true });
         }
         else if (verifyResponse.pay_status === "Failed") {
             statusMessage = "Payment failed";
             templateFile = "ConfirmationFailure.html";
             // Update the payment status in the database
-            const result = yield counseling_model_1.default.findOneAndUpdate({ id }, { isPayment: false });
+            const result = yield counseling_model_1.default.findOneAndUpdate({ _id: bookingId }, {
+                isPayment: false,
+                isBooked: false,
+                BookedBy: null,
+                BookedByName: null,
+                BookedByPhone: null,
+                BookedByEmail: null,
+            });
         }
         else {
             throw new Error("Unexpected payment status or response");

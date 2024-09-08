@@ -20,6 +20,8 @@ const headers = {
 // Function to send payment request
 export async function sendPaymentRequest(paymentData: PaymentData) {
   // Construct the payload dynamically
+  const amount =
+    paymentData.amount !== undefined ? paymentData.amount.toFixed(2) : "0.00";
   const payload = {
     store_id: config.STORE_ID,
     signature_key: config.SIGNATURE_KEY,
@@ -27,7 +29,7 @@ export async function sendPaymentRequest(paymentData: PaymentData) {
     success_url: `http://localhost:5000/api/payment/confirmation?bookingId=${paymentData.id}&status=success`,
     fail_url: `http://localhost:5000/api/payment/confirmation?bookingId=${paymentData.id}&status=failed`,
     cancel_url: "/",
-    amount: paymentData.amount.toFixed(2),
+    amount: amount,
     currency: "BDT",
     desc: "Payment",
     cus_name: paymentData.UserName,

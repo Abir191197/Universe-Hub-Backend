@@ -16,4 +16,6 @@ router.get("/", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_
 router.put("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), course_controller_1.courseControllers.addCourseInPersonalProfile);
 router.delete("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), course_controller_1.courseControllers.removeCourseFromPersonalProfile);
 router.get("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), course_controller_1.courseControllers.getSingleCourse);
+//Course Delete Only Admin
+router.delete("/CourseDeleteForAdmin/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin), course_controller_1.courseControllers.removeCourseFromDatabase);
 exports.CourseRoutes = router;

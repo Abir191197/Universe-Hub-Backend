@@ -1,10 +1,11 @@
 import express from "express";
 import { AuthRoutes } from "../module/auth/auth.route";
-import { UserRoutes } from "../module/users/users.route";
 import { CourseRoutes } from "../module/courses/course.route";
 import { fileRoutes } from "../module/File/file.route";
-import { CounsellingRoute } from "../module/Meet Link/counseling.route";
+import { CounsellingRoute } from "../module/One To One Counselling/counseling.route";
 import { PaymentRoutes } from "../module/Payment/payment.route";
+import { UserRoutes } from "../module/users/users.route";
+import { GroupCounsellingRoute } from "../module/Group Counselling/GroupCounselling.route";
 
 const router = express.Router();
 
@@ -30,8 +31,12 @@ const moduleRoutes = [
     route: CounsellingRoute,
   },
   {
-    path: "/Payment",
+    path: "/payment",
     route: PaymentRoutes,
+  },
+  {
+    path: "/GroupCounselling",
+    route: GroupCounsellingRoute,
   },
 ];
 

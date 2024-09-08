@@ -4,7 +4,9 @@ import sendResponse from "../../utils/sendResponse";
 import { UserService } from "./users.service";
 
 const findUser = catchAsync(async (req, res) => {
-  const result = await UserService.findUserFromDB(req.user);
+
+  const user = req.user ?? null; 
+  const result = await UserService.findUserFromDB(user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -14,7 +16,8 @@ const findUser = catchAsync(async (req, res) => {
 });
 
 const updatedUser = catchAsync(async (req, res) => {
-  const result = await UserService.updatedUserIntoDB(req.user, req.body);
+  const user = req.user ?? null;  
+  const result = await UserService.updatedUserIntoDB(user, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

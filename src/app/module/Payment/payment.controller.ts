@@ -4,16 +4,17 @@ import catchAsync from "../../utils/catchAsync";
 
 
 const confirmationPayment = catchAsync(async (req: Request, res: Response) => {
-  const { id, status } = req.query;
-
+  const { bookingId, status } = req.query;
+  console.log(bookingId);
+  console.log(status);
   try {
     // Validate query parameters
-    if (typeof id !== "string" || typeof status !== "string") {
+    if (typeof bookingId !== "string" || typeof status !== "string") {
       return res.status(400).send("Invalid query parameters");
     }
 
     // Call the service to get the confirmation template
-    const result = await paymentServices.confirmationService(id, status);
+    const result = await paymentServices.confirmationService(bookingId, status);
 
     // Set content-type to HTML
     res.setHeader("Content-Type", "text/html");

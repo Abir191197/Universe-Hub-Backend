@@ -12,45 +12,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userControllers = void 0;
+exports.GroupStudyController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const users_service_1 = require("./users.service");
-const findUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const user = (_a = req.user) !== null && _a !== void 0 ? _a : null;
-    const result = yield users_service_1.UserService.findUserFromDB(user);
+const GroupCounselling_service_1 = require("./GroupCounselling.service");
+// create Event Full link into DB
+const createGroupStudy = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = {
+        authUserInformation: req.user,
+        EventInformation: req.body,
+    };
+    const result = yield GroupCounselling_service_1.GroupStudyService.createGroupStudyIntoDB(payload);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "User profile retrieved successfully",
+        message: "Counseling Event Create successfully",
         data: result,
     });
 }));
-const updatedUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const user = (_a = req.user) !== null && _a !== void 0 ? _a : null;
-    const result = yield users_service_1.UserService.updatedUserIntoDB(user, req.body);
-    (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
-        success: true,
-        message: "Profile updated successfully",
-        data: result,
-    });
-}));
-const roleChange = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//Delete Group study
+const deleteGroupStudy = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield users_service_1.UserService.updatedRoleIntoDB(id);
+    const result = yield GroupCounselling_service_1.GroupStudyService.GroupStudyDeleteFromDB(id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Role updated successfully",
+        message: "Group Study deleted successfully",
         data: result,
     });
 }));
-exports.userControllers = {
-    findUser,
-    updatedUser,
-    roleChange,
+//Get All Group study
+const getAllGroupStudy = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield GroupCounselling_service_1.GroupStudyService.getAllCounsellingFromDB();
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Group study are retrieved  succesfully",
+        data: result,
+    });
+}));
+exports.GroupStudyController = {
+    createGroupStudy,
+    deleteGroupStudy,
+    getAllGroupStudy,
 };

@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const auth_route_1 = require("../module/auth/auth.route");
-const users_route_1 = require("../module/users/users.route");
 const course_route_1 = require("../module/courses/course.route");
 const file_route_1 = require("../module/File/file.route");
-const counseling_route_1 = require("../module/Meet Link/counseling.route");
+const counseling_route_1 = require("../module/One To One Counselling/counseling.route");
 const payment_route_1 = require("../module/Payment/payment.route");
+const users_route_1 = require("../module/users/users.route");
+const GroupCounselling_route_1 = require("../module/Group Counselling/GroupCounselling.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -33,8 +34,12 @@ const moduleRoutes = [
         route: counseling_route_1.CounsellingRoute,
     },
     {
-        path: "/Payment",
+        path: "/payment",
         route: payment_route_1.PaymentRoutes,
+    },
+    {
+        path: "/GroupCounselling",
+        route: GroupCounselling_route_1.GroupCounsellingRoute,
     },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route)); // This will automatically loop your routes that you will add in the moduleRoutes array

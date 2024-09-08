@@ -91,10 +91,25 @@ const getSingleCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function
         }
     }
 });
+//Course Delete For Admin
+const removeCourseFromServer = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(id);
+    try {
+        const result = yield course_model_1.default.findByIdAndDelete(id);
+        if (!result) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Course not found");
+        }
+        return result;
+    }
+    catch (error) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to delete Course");
+    }
+});
 exports.courseService = {
     createCourseIntoDB,
     getAllCourserFromDB,
     createCourseInProfileIntoDB,
     getSingleCourseFromDB,
     removeCourseFromProfileInDB,
+    removeCourseFromServer,
 };
