@@ -106,7 +106,6 @@ const getOwnerCounsellingFromDB = async (payload: { authUserInformation: any }) 
 
 
 //booked
-
 const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
   const session: ClientSession = await mongoose.startSession();
   let result;
@@ -174,9 +173,15 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
       result = { message: "Booking confirmed successfully" };
     }
   } catch (error) {
-    await session.abortTransaction();
-    throw error; // Let the error propagate up
+    // Rollback the transaction if any error occurs
+    try {
+      await session.abortTransaction();
+    } catch (abortError) {
+      console.error("Failed to abort transaction:", abortError);
+    }
+    throw error; // Rethrow the original error
   } finally {
+    // Ensure the session ends
     session.endSession();
   }
 

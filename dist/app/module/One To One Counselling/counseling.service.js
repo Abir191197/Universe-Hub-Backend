@@ -155,10 +155,17 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
         }
     }
     catch (error) {
-        yield session.abortTransaction();
-        throw error; // Let the error propagate up
+        // Rollback the transaction if any error occurs
+        try {
+            yield session.abortTransaction();
+        }
+        catch (abortError) {
+            console.error("Failed to abort transaction:", abortError);
+        }
+        throw error; // Rethrow the original error
     }
     finally {
+        // Ensure the session ends
         session.endSession();
     }
     return result;
