@@ -157,7 +157,6 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
         paymentSession = await sendPaymentRequest(paymentData);
       } catch (error) {
         console.error("Failed to create payment session:", error);
-        await session.abortTransaction();
         throw new AppError(500, "Failed to initiate payment session.");
       }
 
@@ -173,12 +172,7 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
       result = { message: "Booking confirmed successfully" };
     }
   } catch (error) {
-    // Rollback the transaction if any error occurs
-    try {
-      await session.abortTransaction();
-    } catch (abortError) {
-      console.error("Failed to abort transaction:", abortError);
-    }
+    // Handle the error without aborting the transaction
     throw error; // Rethrow the original error
   } finally {
     // Ensure the session ends
@@ -187,7 +181,6 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
 
   return result;
 };
-
 
 
 //Event DELETE

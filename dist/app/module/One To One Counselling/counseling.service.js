@@ -138,7 +138,6 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
             }
             catch (error) {
                 console.error("Failed to create payment session:", error);
-                yield session.abortTransaction();
                 throw new AppError_1.default(500, "Failed to initiate payment session.");
             }
             // Save booking after initiating payment
@@ -155,13 +154,7 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
         }
     }
     catch (error) {
-        // Rollback the transaction if any error occurs
-        try {
-            yield session.abortTransaction();
-        }
-        catch (abortError) {
-            console.error("Failed to abort transaction:", abortError);
-        }
+        // Handle the error without aborting the transaction
         throw error; // Rethrow the original error
     }
     finally {
