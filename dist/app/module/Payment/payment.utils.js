@@ -24,15 +24,15 @@ const headers = {
 function sendPaymentRequest(paymentData) {
     return __awaiter(this, void 0, void 0, function* () {
         // Construct the payload dynamically
-        const amount = paymentData.amount !== undefined ? paymentData.amount.toFixed(2) : "0.00";
+        var _a;
         const payload = {
             store_id: config_1.default.STORE_ID,
             signature_key: config_1.default.SIGNATURE_KEY,
             tran_id: paymentData.id,
-            success_url: `http://localhost:5000/api/payment/confirmation?bookingId=${paymentData.id}&status=success`,
-            fail_url: `http://localhost:5000/api/payment/confirmation?bookingId=${paymentData.id}&status=failed`,
+            success_url: `https://universe-hub.vercel.app/student/api/payment/confirmation?bookingId=${paymentData.id}&status=success`,
+            fail_url: `https://universe-hub.vercel.app/student/api/payment/confirmation?bookingId=${paymentData.id}&status=failed`,
             cancel_url: "/",
-            amount: amount,
+            amount: (_a = paymentData === null || paymentData === void 0 ? void 0 : paymentData.amount) === null || _a === void 0 ? void 0 : _a.toFixed(2),
             currency: "BDT",
             desc: "Payment",
             cus_name: paymentData.UserName,
