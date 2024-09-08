@@ -58,12 +58,20 @@ const getCounsellingByWhoOwner = (0, catchAsync_1.default)((req, res) => __await
 const BookedEvent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const user = req.user;
-    // Now `user` is guaranteed to be `JwtPayload`, so you can pass it directly
-    const result = yield counseling_service_1.CounselingServices.EventBookingConfirmIntoDB(user, id);
+    // Handle the case where user is undefined
+    if (!user) {
+        return res.status(http_status_1.default.UNAUTHORIZED).json({
+            status: "error",
+            message: "Authentication information is missing.",
+        });
+    }
+    // Call the function with the correct argument order
+    const result = yield counseling_service_1.CounselingServices.EventBookingConfirmIntoDB(id, user);
+    // Send success response
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Event Booked successfully",
+        message: "Event booked successfully",
         data: result,
     });
 }));
