@@ -6,6 +6,7 @@ import AppError from "../../errors/AppError";
 import { PaymentData, sendPaymentRequest } from "../Payment/payment.utils";
 import UserModel from "../users/users.model";
 import CounselingModel from "./counseling.model";
+import { sendSmsToUser, sms_send } from "./SmsSend";
 
 //createCounselingDataIntoDB
 
@@ -107,9 +108,14 @@ const getOwnerCounsellingFromDB = async (payload: { authUserInformation: any }) 
 
 //booked
 
-const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
-  const session: ClientSession = await mongoose.startSession();
 
+export const EventBookingConfirmIntoDB = async (
+  id: string,
+  user: JwtPayload
+) => {
+  const session: ClientSession = await mongoose.startSession();
+  console.log(user);
+  
   try {
     session.startTransaction();
 
@@ -122,6 +128,10 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
     if (booking.isBooked) {
       throw new AppError(400, "Booking is already confirmed");
     }
+
+    
+
+
 
     // Fetch the user
     const isUserExist = await UserModel.findOne({ email: user.email })
@@ -138,11 +148,11 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
     booking.BookedByEmail = isUserExist.email;
     booking.BookedByPhone = isUserExist.phone;
 
-   if (booking.CashAmount !== undefined && booking.CashAmount > 0) {
-  // If payment is required, set isPayment to false initially
-  booking.isPayment = false;
+    if (booking.CashAmount !== undefined && booking.CashAmount > 0) {
+      // If payment is required, set isPayment to false initially
+      booking.isPayment = false;
 
-      // Prepare payment data
+      // Prepare payment data (for payment handling)
       const paymentData: PaymentData = {
         id,
         amount: booking.CashAmount,
@@ -152,7 +162,6 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
         UserAddress: isUserExist.address,
       };
 
-     
       let paymentSession;
       try {
         paymentSession = await sendPaymentRequest(paymentData);
@@ -175,9 +184,25 @@ const EventBookingConfirmIntoDB = async (id: string, user: JwtPayload) => {
       await booking.save({ session });
       await session.commitTransaction();
       session.endSession();
-
-      return { message: "Booking confirmed successfully" };
+      // Send SMS confirmation after booking is confirmed
+      try {
+        const messageData = {
+          CounsellorName: booking.CreateBy,
+          BookingName: isUserExist.name,
+          Amount: booking?.CashAmount,
+          MeetLink: booking?.MeetLink,
+          RoomNumber: booking?.StudyRoomNumber,
+          selectDate: booking.selectDate,
+        };
+      
+        await sendSmsToUser(isUserExist.phone, messageData);
+        return { message: "Booking confirmed successfully, SMS sent!" };
+      } catch (error) {
+        console.error("Failed to send SMS:", error);
+        return { message: "Booking confirmed, but failed to send SMS." };
+      }
     }
+
   } catch (error) {
     await session.abortTransaction();
     session.endSession();

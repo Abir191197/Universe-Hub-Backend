@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CounselingServices = void 0;
+exports.CounselingServices = exports.EventBookingConfirmIntoDB = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const payment_utils_1 = require("../Payment/payment.utils");
 const users_model_1 = __importDefault(require("../users/users.model"));
 const counseling_model_1 = __importDefault(require("./counseling.model"));
+const SmsSend_1 = require("./SmsSend");
 //createCounselingDataIntoDB
 const createCounselingIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { authUserInformation, EventInformation } = payload;
@@ -96,6 +97,7 @@ const getOwnerCounsellingFromDB = (payload) => __awaiter(void 0, void 0, void 0,
 //booked
 const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield mongoose_1.default.startSession();
+    console.log(user);
     try {
         session.startTransaction();
         // Fetch the booking record
@@ -122,7 +124,7 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
         if (booking.CashAmount !== undefined && booking.CashAmount > 0) {
             // If payment is required, set isPayment to false initially
             booking.isPayment = false;
-            // Prepare payment data
+            // Prepare payment data (for payment handling)
             const paymentData = {
                 id,
                 amount: booking.CashAmount,
@@ -153,7 +155,23 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
             yield booking.save({ session });
             yield session.commitTransaction();
             session.endSession();
-            return { message: "Booking confirmed successfully" };
+            // Send SMS confirmation after booking is confirmed
+            try {
+                const messageData = {
+                    CounsellorName: booking.CreateBy,
+                    BookingName: isUserExist.name,
+                    Amount: booking === null || booking === void 0 ? void 0 : booking.CashAmount,
+                    MeetLink: booking === null || booking === void 0 ? void 0 : booking.MeetLink,
+                    RoomNumber: booking === null || booking === void 0 ? void 0 : booking.StudyRoomNumber,
+                    selectDate: booking.selectDate,
+                };
+                yield (0, SmsSend_1.sendSmsToUser)(isUserExist.phone, messageData);
+                return { message: "Booking confirmed successfully, SMS sent!" };
+            }
+            catch (error) {
+                console.error("Failed to send SMS:", error);
+                return { message: "Booking confirmed, but failed to send SMS." };
+            }
         }
     }
     catch (error) {
@@ -167,6 +185,7 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
         }
     }
 });
+exports.EventBookingConfirmIntoDB = EventBookingConfirmIntoDB;
 //Event DELETE
 const EventDeleteFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -201,7 +220,7 @@ const CompleteCounsellingUpdatedIntoBD = (id) => __awaiter(void 0, void 0, void 
 exports.CounselingServices = {
     createCounselingIntoDB,
     getCounsellingFromDB,
-    EventBookingConfirmIntoDB,
+    EventBookingConfirmIntoDB: exports.EventBookingConfirmIntoDB,
     getOwnerCounsellingFromDB,
     EventDeleteFromDB,
     CompleteCounsellingUpdatedIntoBD,
