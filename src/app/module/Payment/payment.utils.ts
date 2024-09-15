@@ -4,7 +4,7 @@ import config from "../../../config";
 // Define the type for payment data
 export interface PaymentData {
   id: string;
-  amount?: number|undefined;
+  amount?: number | undefined;
   UserName: string;
   UserEmail: string;
   UserPhone: string;
@@ -20,7 +20,7 @@ const headers = {
 // Function to send payment request
 export async function sendPaymentRequest(paymentData: PaymentData) {
   // Construct the payload dynamically
-  
+
   const payload = {
     store_id: config.STORE_ID,
     signature_key: config.SIGNATURE_KEY,

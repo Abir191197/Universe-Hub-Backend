@@ -49,8 +49,43 @@ const roleChange = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+//ban the user
+const banUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield users_service_1.UserService.BanIntoDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "User Suspend successfully",
+        data: result,
+    });
+}));
+//active user
+const ActiveUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield users_service_1.UserService.ActiveUserIntoDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "User Active successfully",
+        data: result,
+    });
+}));
+//get all user from DB
+const getAllUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield users_service_1.UserService.GetAllUserFromDB();
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: " All User get  successfully",
+        data: result,
+    });
+}));
 exports.userControllers = {
     findUser,
     updatedUser,
     roleChange,
+    getAllUser,
+    banUser,
+    ActiveUser,
 };

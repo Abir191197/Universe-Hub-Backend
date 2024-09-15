@@ -15,36 +15,57 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.paymentServices = void 0;
 const fs_1 = require("fs");
 const path_1 = require("path");
-const payment_utils_1 = require("./payment.utils");
 const counseling_model_1 = __importDefault(require("../One To One Counselling/counseling.model"));
+const SmsSend_1 = require("../One To One Counselling/SmsSend");
+const payment_utils_1 = require("./payment.utils");
 const confirmationService = (bookingId, status) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(bookingId);
-    console.log(status);
+    console.log(`Booking ID: ${bookingId}`);
+    console.log(`Status: ${status}`);
     try {
         // Verify the payment status using the transaction/order ID
         const verifyResponse = yield (0, payment_utils_1.verifyPayment)(bookingId);
-        console.log(verifyResponse);
+        console.log(`Verify Response: ${JSON.stringify(verifyResponse)}`);
         let statusMessage;
         let templateFile;
-        // Determine status message and template based on verification response
         if (status === "success" && verifyResponse.pay_status === "Successful") {
             statusMessage = "Payment successful";
             templateFile = "ConfirmationSuccess.html";
             // Update the payment status in the database
-            yield counseling_model_1.default.findOneAndUpdate({ _id: bookingId }, { isPayment: true });
+            const booking = yield counseling_model_1.default.findByIdAndUpdate(bookingId, { isPayment: true }, { new: true } // Return the updated document
+            ).exec();
+            if (booking) {
+                // Send SMS confirmation after booking is confirmed
+                try {
+                    const messageData = {
+                        CounsellorName: booking.CreateBy,
+                        BookingName: booking.BookedByName,
+                        MeetLink: booking.MeetLink,
+                        RoomNumber: booking.StudyRoomNumber,
+                        selectDate: booking.selectDate,
+                    };
+                    console.log(messageData);
+                    yield (0, SmsSend_1.sendSmsToUser)(booking.BookedByPhone, messageData);
+                }
+                catch (error) {
+                    console.error("Failed to send SMS:", error);
+                }
+            }
+            else {
+                throw new Error("Booking not found after payment confirmation");
+            }
         }
         else if (verifyResponse.pay_status === "Failed") {
             statusMessage = "Payment failed";
             templateFile = "ConfirmationFailure.html";
             // Update the payment status in the database
-            const result = yield counseling_model_1.default.findOneAndUpdate({ _id: bookingId }, {
+            yield counseling_model_1.default.findByIdAndUpdate(bookingId, {
                 isPayment: false,
                 isBooked: false,
                 BookedBy: null,
                 BookedByName: null,
                 BookedByPhone: null,
                 BookedByEmail: null,
-            });
+            }).exec();
         }
         else {
             throw new Error("Unexpected payment status or response");

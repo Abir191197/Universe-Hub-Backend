@@ -1,47 +1,65 @@
 import { readFileSync } from "fs";
 import { join } from "path";
-
-import { verifyPayment } from "./payment.utils";
 import CounselingModel from "../One To One Counselling/counseling.model";
-
+import { sendSmsToUser } from "../One To One Counselling/SmsSend";
+import { verifyPayment } from "./payment.utils";
 
 const confirmationService = async (bookingId: string, status: string) => {
+  console.log(`Booking ID: ${bookingId}`);
+  console.log(`Status: ${status}`);
 
-  console.log(bookingId);
-  console.log(status);
   try {
     // Verify the payment status using the transaction/order ID
     const verifyResponse = await verifyPayment(bookingId);
-console.log(verifyResponse);
-    let statusMessage;
-    let templateFile;
+    console.log(`Verify Response: ${JSON.stringify(verifyResponse)}`);
 
-    // Determine status message and template based on verification response
+    let statusMessage: string;
+    let templateFile: string;
+
     if (status === "success" && verifyResponse.pay_status === "Successful") {
       statusMessage = "Payment successful";
       templateFile = "ConfirmationSuccess.html";
 
       // Update the payment status in the database
-      await CounselingModel.findOneAndUpdate(
-        { _id: bookingId },
-        { isPayment: true }
-      );
+      const booking = await CounselingModel.findByIdAndUpdate(
+        bookingId,
+        { isPayment: true },
+        { new: true } // Return the updated document
+      ).exec();
+
+      if (booking) {
+        // Send SMS confirmation after booking is confirmed
+        try {
+          const messageData = {
+            CounsellorName: booking.CreateBy,
+            BookingName: booking.BookedByName,
+            MeetLink: booking.MeetLink,
+            RoomNumber: booking.StudyRoomNumber,
+            selectDate: booking.selectDate,
+          };
+          console.log(messageData);
+          await sendSmsToUser(booking.BookedByPhone, messageData);
+         
+        } catch (error) {
+          console.error("Failed to send SMS:", error);
+          
+        }
+      } else {
+        throw new Error("Booking not found after payment confirmation");
+      }
     } else if (verifyResponse.pay_status === "Failed") {
       statusMessage = "Payment failed";
       templateFile = "ConfirmationFailure.html";
 
       // Update the payment status in the database
-      const result = await CounselingModel.findOneAndUpdate(
-        { _id:bookingId },
-        {
-          isPayment: false,
-          isBooked: false,
-          BookedBy: null,
-          BookedByName: null,
-          BookedByPhone: null,
-          BookedByEmail: null,
-        }
-      );
+      await CounselingModel.findByIdAndUpdate(bookingId, {
+        isPayment: false,
+        isBooked: false,
+        BookedBy: null,
+        BookedByName: null,
+        BookedByPhone: null,
+        BookedByEmail: null,
+      }).exec();
     } else {
       throw new Error("Unexpected payment status or response");
     }

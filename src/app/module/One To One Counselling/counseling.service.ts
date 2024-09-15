@@ -6,7 +6,7 @@ import AppError from "../../errors/AppError";
 import { PaymentData, sendPaymentRequest } from "../Payment/payment.utils";
 import UserModel from "../users/users.model";
 import CounselingModel from "./counseling.model";
-import { sendSmsToUser, sms_send } from "./SmsSend";
+import { sendSmsToUser, } from "./SmsSend";
 
 //createCounselingDataIntoDB
 
@@ -189,7 +189,6 @@ export const EventBookingConfirmIntoDB = async (
         const messageData = {
           CounsellorName: booking.CreateBy,
           BookingName: isUserExist.name,
-          Amount: booking?.CashAmount,
           MeetLink: booking?.MeetLink,
           RoomNumber: booking?.StudyRoomNumber,
           selectDate: booking.selectDate,

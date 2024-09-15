@@ -43,7 +43,7 @@ function sms_send(number, messageData) {
         const message = `Dear ${messageData.BookingName || "User"},
 Your booking has been confirmed!
 Counsellor: ${messageData.CounsellorName || "N/A"}
-MeetLink: ${messageData.MeetLink || "N/A"}
+Meet Link: ${messageData.MeetLink || "N/A"}
 Room Number: ${messageData.RoomNumber || "N/A"}
 Date: ${formatDate(messageData.selectDate)}`;
         // Include formatted date

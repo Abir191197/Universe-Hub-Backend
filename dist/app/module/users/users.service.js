@@ -19,17 +19,31 @@ const users_model_1 = __importDefault(require("./users.model"));
 //find one user into DB
 const findUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Check if payload is not null
         if (payload !== null) {
+            // Find user by email
             const result = yield users_model_1.default.findOne({
                 email: payload.email,
             })
-                .select("-password")
-                .populate("courses");
+                .select("-password") // Exclude password field from results
+                .populate("courses"); // Populate courses field
+            // Check if user is found
+            if (!result) {
+                throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+            }
+            // Check if user status is 'Suspended'
+            if (result.status === "Suspended") {
+                throw new AppError_1.default(http_status_1.default.FORBIDDEN, "User account is suspended");
+            }
+            // Return the user data
             return result;
         }
+        // Handle case where payload is null
+        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "Invalid token payload");
     }
     catch (error) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to Get User");
+        // Handle and throw errors
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to get user");
     }
 });
 //Updated User Into DB
@@ -57,10 +71,10 @@ const updatedRoleIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* ()
         if (!isUserExist) {
             throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
         }
-        if (isUserExist.role === "counsellor") {
-            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User already counsellor role");
+        if (isUserExist.role === "admin") {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User already admin role");
         }
-        isUserExist.role = "counsellor";
+        isUserExist.role = "admin";
         yield isUserExist.save();
         return isUserExist;
     }
@@ -68,8 +82,76 @@ const updatedRoleIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* ()
         throw error;
     }
 });
+const BanIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Check if the user exists
+        const isUserExist = yield users_model_1.default.findById(id);
+        if (!isUserExist) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+        }
+        // Check if the user is already suspended
+        if (isUserExist.status === "Suspended") {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User is already suspended");
+        }
+        // Update the user's status to 'Suspended'
+        isUserExist.status = "Suspended";
+        // Save the changes to the database
+        yield isUserExist.save();
+        // Return the updated user information
+        return isUserExist;
+    }
+    catch (error) {
+        // If it's an AppError, rethrow it, otherwise wrap it in a new AppError
+        if (error instanceof AppError_1.default) {
+            throw error;
+        }
+        throw new AppError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, "Failed to suspend user");
+    }
+});
+//active the user
+const ActiveUserIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Check if the user exists
+        const isUserExist = yield users_model_1.default.findById(id);
+        if (!isUserExist) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+        }
+        // Check if the user is already active
+        if (isUserExist.status === "Active") {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User is already active");
+        }
+        // Update the user's status to 'Active'
+        isUserExist.status = "Active";
+        // Save the changes to the database
+        yield isUserExist.save();
+        // Return the updated user information
+        return isUserExist;
+    }
+    catch (error) {
+        // If it's an AppError, rethrow it, otherwise wrap it in a new AppError
+        if (error instanceof AppError_1.default) {
+            throw error;
+        }
+        throw new AppError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, "Failed to activate user");
+    }
+});
+//get All USer
+const GetAllUserFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Fetch all users from the database
+        const result = yield users_model_1.default.find();
+        return result;
+    }
+    catch (error) {
+        // Throw a custom error if something goes wrong
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to get all users");
+    }
+});
 exports.UserService = {
     findUserFromDB,
     updatedUserIntoDB,
-    updatedRoleIntoDB
+    updatedRoleIntoDB,
+    GetAllUserFromDB,
+    BanIntoDB,
+    ActiveUserIntoDB,
 };

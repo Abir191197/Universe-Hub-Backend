@@ -12,4 +12,7 @@ const router = express_1.default.Router();
 router.get("/me", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student, user_constant_1.USER_ROLE.counsellor), users_controller_1.userControllers.findUser);
 router.put("/me", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student, user_constant_1.USER_ROLE.counsellor), users_controller_1.userControllers.updatedUser);
 router.put("/roleChange/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin), users_controller_1.userControllers.roleChange);
+router.put("/Suspended/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin), users_controller_1.userControllers.banUser);
+router.put("/Active/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin), users_controller_1.userControllers.ActiveUser);
+router.get("/AllUser", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin), users_controller_1.userControllers.getAllUser);
 exports.UserRoutes = router;

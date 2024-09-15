@@ -23,5 +23,22 @@ router.put(
   authVerify(USER_ROLE.admin),
   userControllers.roleChange
 )
+router.put(
+  "/Suspended/:id",
+  authVerify(USER_ROLE.admin),
+  userControllers.banUser
+);
+router.put(
+  "/Active/:id",
+  authVerify(USER_ROLE.admin),
+  userControllers.ActiveUser
+);
+
+router.get(
+  "/AllUser",
+  authVerify(USER_ROLE.admin),
+  userControllers.getAllUser
+);
+
 
 export const UserRoutes = router;

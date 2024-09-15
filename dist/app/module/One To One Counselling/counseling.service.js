@@ -160,7 +160,6 @@ const EventBookingConfirmIntoDB = (id, user) => __awaiter(void 0, void 0, void 0
                 const messageData = {
                     CounsellorName: booking.CreateBy,
                     BookingName: isUserExist.name,
-                    Amount: booking === null || booking === void 0 ? void 0 : booking.CashAmount,
                     MeetLink: booking === null || booking === void 0 ? void 0 : booking.MeetLink,
                     RoomNumber: booking === null || booking === void 0 ? void 0 : booking.StudyRoomNumber,
                     selectDate: booking.selectDate,

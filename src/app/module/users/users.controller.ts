@@ -39,10 +39,52 @@ const roleChange = catchAsync(async (req, res) => {
   });
 });
 
+//ban the user
+
+const banUser = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserService.BanIntoDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User Suspend successfully",
+    data: result,
+  });
+});
+//active user
+const ActiveUser = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserService.ActiveUserIntoDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User Active successfully",
+    data: result,
+  });
+});
+
+
+//get all user from DB
+const getAllUser = catchAsync(async (req, res) => {
+
+  const result = await UserService.GetAllUserFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: " All User get  successfully",
+    data: result,
+  });
+});
+
 
 
 export const userControllers = {
   findUser,
   updatedUser,
   roleChange,
+  getAllUser,
+  banUser,
+  ActiveUser,
 };
