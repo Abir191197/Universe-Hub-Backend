@@ -58,4 +58,11 @@ router.put(
 
 )
 
+router.delete(
+  "/delete/:id",
+  authVerify(USER_ROLE.admin),
+  fileUploadController.fileDelete
+);
+
+
 export const fileRoutes = router;

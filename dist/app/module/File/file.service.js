@@ -106,9 +106,25 @@ const fileStatusChangeIntoDB = (id) => __awaiter(void 0, void 0, void 0, functio
         throw error;
     }
 });
+const FileDeleteFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Attempt to delete the file by its ID
+        const file = yield file_model_1.default.findByIdAndDelete(id);
+        if (!file) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, "File not found");
+        }
+        return file;
+    }
+    catch (error) {
+        // Log the error if needed
+        console.error("Error deleting file:", error);
+        throw error;
+    }
+});
 exports.fileUploadService = {
     createFileUploadIntoDB,
     fileStatusChangeIntoDB,
     getAllFilesForCourse,
     getAllFileDetailsFromDB,
+    FileDeleteFromDB,
 };

@@ -32,4 +32,5 @@ sendImageToCloud_1.upload.single("file"),
 router.get("/CourseFile/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), file_controller_1.fileUploadController.getAllFileForOneCourses);
 router.get("/AllFile", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), file_controller_1.fileUploadController.getAllFileForAdmin);
 router.put("/approve/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin), file_controller_1.fileUploadController.fileApproved);
+router.delete("/delete/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin), file_controller_1.fileUploadController.fileDelete);
 exports.fileRoutes = router;

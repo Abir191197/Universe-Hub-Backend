@@ -73,9 +73,32 @@ const fileApproved = catchAsync(async (req, res) => {
   });
 });
 
+const fileDelete = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await fileUploadService.FileDeleteFromDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "File Delete successfully",
+    data: result,
+  });
+});
+
+
+
+
+
+
+
+
+
+
 export const fileUploadController = {
   fileUpload,
   fileApproved,
   getAllFileForOneCourses,
   getAllFileForAdmin,
+  fileDelete,
 };

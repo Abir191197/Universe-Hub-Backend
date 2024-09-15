@@ -121,9 +121,30 @@ const fileStatusChangeIntoDB = async (id: string) => {
   }
 };
 
+
+const FileDeleteFromDB = async (id: string) => {
+  try {
+    // Attempt to delete the file by its ID
+    const file = await FileModel.findByIdAndDelete(id);
+
+    if (!file) {
+      throw new AppError(httpStatus.NOT_FOUND, "File not found");
+    }
+
+    return file;
+  } catch (error) {
+    // Log the error if needed
+    console.error("Error deleting file:", error);
+    throw error;
+  }
+};
+
+
+
 export const fileUploadService = {
   createFileUploadIntoDB,
   fileStatusChangeIntoDB,
   getAllFilesForCourse,
   getAllFileDetailsFromDB,
+  FileDeleteFromDB,
 };
