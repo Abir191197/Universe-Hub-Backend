@@ -64,8 +64,8 @@ const createFileUploadIntoDB = (payload) => __awaiter(void 0, void 0, void 0, fu
 //Get file details for one course
 const getAllFilesForCourse = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Find files associated with the given courseId
-        const result = yield file_model_1.default.find({ courseId: id });
+        // Find files associated with the given courseId and have the status "Approved"
+        const result = yield file_model_1.default.find({ courseId: id, status: "Approved" });
         return result;
     }
     catch (error) {

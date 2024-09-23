@@ -11,6 +11,7 @@ const counseling_route_1 = require("../module/One To One Counselling/counseling.
 const payment_route_1 = require("../module/Payment/payment.route");
 const users_route_1 = require("../module/users/users.route");
 const GroupCounselling_route_1 = require("../module/Group Counselling/GroupCounselling.route");
+const message_route_1 = require("../module/Message/message.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -40,6 +41,10 @@ const moduleRoutes = [
     {
         path: "/GroupCounselling",
         route: GroupCounselling_route_1.GroupCounsellingRoute,
+    },
+    {
+        path: "/Message",
+        route: message_route_1.MessageRoute,
     },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route)); // This will automatically loop your routes that you will add in the moduleRoutes array

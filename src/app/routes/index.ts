@@ -6,6 +6,8 @@ import { CounsellingRoute } from "../module/One To One Counselling/counseling.ro
 import { PaymentRoutes } from "../module/Payment/payment.route";
 import { UserRoutes } from "../module/users/users.route";
 import { GroupCounsellingRoute } from "../module/Group Counselling/GroupCounselling.route";
+import { MessageRoute } from "../module/Message/message.route";
+
 
 const router = express.Router();
 
@@ -37,6 +39,10 @@ const moduleRoutes = [
   {
     path: "/GroupCounselling",
     route: GroupCounsellingRoute,
+  },
+  {
+    path: "/Message",
+    route: MessageRoute,
   },
 ];
 

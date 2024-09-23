@@ -46,10 +46,10 @@ const loginUserFromDB = async (payload: TLoginUser) => {
     throw new AppError(httpStatus.NOT_FOUND, "This user is not found!");
   }
 
-  if (user.status === "ban") {
+  if (user.status === "Suspended") {
     throw new AppError(
       httpStatus.FORBIDDEN,
-      "This user is Ban contact to support"
+      "This user is Suspended contact to support"
     );
   }
   if (user.isDeleted === true) {
@@ -65,6 +65,7 @@ const loginUserFromDB = async (payload: TLoginUser) => {
 
   // Creating a JWT token upon successful login
   const jwtPayload: JwtPayload = {
+    id:user._id,
     name: user.name,
     email: user.email,
     role: user.role,

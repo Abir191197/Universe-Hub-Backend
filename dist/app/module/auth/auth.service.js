@@ -58,8 +58,8 @@ const loginUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function*
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "This user is not found!");
     }
-    if (user.status === "ban") {
-        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "This user is Ban contact to support");
+    if (user.status === "Suspended") {
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "This user is Suspended contact to support");
     }
     if (user.isDeleted === true) {
         throw new AppError_1.default(http_status_1.default.GONE, "This Account is Deleted");
@@ -71,6 +71,7 @@ const loginUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function*
     }
     // Creating a JWT token upon successful login
     const jwtPayload = {
+        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,

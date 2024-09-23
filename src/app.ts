@@ -1,28 +1,18 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Request, Response } from "express";
-
 import globalErrorHandler from "./app/middlewares/globalErrorhandler";
 import notFound from "./app/middlewares/notFound";
 import router from "./app/routes";
+import { initSocket } from "./socket"; // Import the socket module
 
 const app = express();
 
-// Parsers
+// Middleware setup
 app.use(express.json());
 app.use(cookieParser());
 
-// Allow multiple origins for CORS
-// const allowedOrigins = [
-//   "http://localhost:5173",
-//   "https://universe-hub.vercel.app",
-//   "http://localhost:5000/",
-// ];
-
+// CORS configuration
 const corsOptions = {
   origin: ["http://localhost:5173", "https://universe-hub.vercel.app"],
   credentials: true,
@@ -42,8 +32,6 @@ app.get("/", (req: Request, res: Response) => {
 
 // Global error handler
 app.use(globalErrorHandler);
-
-// Not Found middleware
 app.use(notFound);
 
 export default app;

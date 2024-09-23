@@ -71,16 +71,16 @@ const createFileUploadIntoDB = async (payload: {
 
 const getAllFilesForCourse = async (id: string) => {
   try {
-    // Find files associated with the given courseId
-    const result = await FileModel.find({ courseId: id });
+    // Find files associated with the given courseId and have the status "Approved"
+    const result = await FileModel.find({ courseId: id, status: "Approved" });
 
     return result;
-
   } catch (error) {
     // Re-throw the error to be handled by the controller or global error handler
     throw error;
   }
 };
+
 
 //get all file details
 const getAllFileDetailsFromDB = async () => {
