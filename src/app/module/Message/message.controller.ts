@@ -1,8 +1,9 @@
+// message.controller.js
 import httpStatus from "http-status";
-import { getSocket } from "../../../socket"; // Adjust the import path as necessary
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { MessageService } from "./message.service";
+import { getSocket } from "../../../socket";
 
 const sendMessage = catchAsync(async (req, res) => {
   const { sender, receiver, content } = req.body;
@@ -14,11 +15,13 @@ const sendMessage = catchAsync(async (req, res) => {
   });
 
   // Emit the new message to the receiver in real-time using Socket.IO
-  const io = getSocket(); // Get the Socket.IO instance
+  const io = getSocket();
   io.to(receiver).emit("receiveMessage", {
+    _id: result._id,
     sender,
     receiver,
     content,
+    timestamp: result.timestamp,
   });
 
   sendResponse(res, {
@@ -34,7 +37,7 @@ const getAllMessages = catchAsync(async (req, res) => {
   const result = await MessageService.getMessagesFromDB({ sender, receiver });
 
   // Emit updated message list to the sender
-  const io = getSocket(); // Get the Socket.IO instance
+  const io = getSocket();
   io.to(sender as string).emit("messageListUpdated", result);
 
   sendResponse(res, {
@@ -45,10 +48,8 @@ const getAllMessages = catchAsync(async (req, res) => {
   });
 });
 
-// Controller to delete a message
 const deleteMessage = catchAsync(async (req, res) => {
   const { messageId } = req.params;
-
   const result = await MessageService.deleteMessageFromDB(messageId);
 
   sendResponse(res, {
@@ -59,16 +60,14 @@ const deleteMessage = catchAsync(async (req, res) => {
   });
 });
 
-// Controller to get all getSideBarReceiver
 const getSideBarReceiver = catchAsync(async (req, res) => {
   const { sender } = req.query;
-
-  const result = await MessageService.getReceiverFromDB(sender as any); 
+  const result = await MessageService.getReceiverFromDB(sender as any);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Messages retrieved successfully.",
+    message: "Receivers retrieved successfully.",
     data: result,
   });
 });

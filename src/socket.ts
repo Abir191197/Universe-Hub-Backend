@@ -1,3 +1,4 @@
+// socket.js
 import { Server } from "socket.io";
 
 let io: Server;
@@ -26,7 +27,11 @@ export const initSocket = (server: any) => {
 
     socket.on("sendMessage", ({ sender, receiver, content }) => {
       console.log(`Message from ${sender} to ${receiver}: ${content}`);
-      io.to(receiver).emit("receiveMessage", { sender, content });
+      io.to(receiver).emit("receiveMessage", {
+        sender,
+        receiver,
+        content,
+      });
     });
 
     socket.on("disconnect", () => {

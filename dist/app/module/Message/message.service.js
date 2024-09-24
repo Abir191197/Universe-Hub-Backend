@@ -61,26 +61,37 @@ const deleteMessageFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
         throw new AppError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, "Failed to delete message");
     }
 });
-const getReceiverFromDB = (sender) => __awaiter(void 0, void 0, void 0, function* () {
+const getReceiverFromDB = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Find messages where the sender matches the provided sender ID
-        const messages = yield message_model_1.default.find({ sender });
-        // Create a Set to collect unique receiver IDs
-        const receiverIds = new Set();
-        messages.forEach((message) => {
-            // Add receiver ID to the Set
-            receiverIds.add(message.receiver.toString()); // Ensure receiver is a string
+        // Find messages where the user is either the sender or the receiver
+        const messages = yield message_model_1.default.find({
+            $or: [{ sender: userId }, { receiver: userId }],
         });
-        // Convert Set to an array of unique receiver IDs
-        const uniqueReceiverIds = Array.from(receiverIds);
-        // Populate names for the unique receiver IDs, excluding the password field
-        const receivers = yield users_model_1.default.find({
-            _id: { $in: uniqueReceiverIds },
-        }).populate("name", "-password");
-        return receivers;
+        // Create a Set to collect unique contact IDs (both senders and receivers)
+        const contactIds = new Set();
+        messages.forEach((message) => {
+            // Add the receiver ID if the user is the sender
+            if (message.sender.toString() === userId.toString()) {
+                contactIds.add(message.receiver.toString());
+            }
+            // Add the sender ID if the user is the receiver
+            if (message.receiver.toString() === userId.toString()) {
+                contactIds.add(message.sender.toString());
+            }
+        });
+        // Convert Set to an array of unique contact IDs
+        const uniqueContactIds = Array.from(contactIds);
+        if (uniqueContactIds.length === 0) {
+            return []; // No contacts found
+        }
+        // Find the users corresponding to the contact IDs, excluding the password field
+        const contacts = yield users_model_1.default.find({
+            _id: { $in: uniqueContactIds },
+        }).select("-password");
+        return contacts;
     }
     catch (error) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to retrieve receivers");
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to retrieve contacts");
     }
 });
 exports.MessageService = {

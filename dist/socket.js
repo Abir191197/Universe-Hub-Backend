@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSocket = exports.initSocket = void 0;
+// socket.js
 const socket_io_1 = require("socket.io");
 let io;
 const initSocket = (server) => {
@@ -24,7 +25,11 @@ const initSocket = (server) => {
         });
         socket.on("sendMessage", ({ sender, receiver, content }) => {
             console.log(`Message from ${sender} to ${receiver}: ${content}`);
-            io.to(receiver).emit("receiveMessage", { sender, content });
+            io.to(receiver).emit("receiveMessage", {
+                sender,
+                receiver,
+                content,
+            });
         });
         socket.on("disconnect", () => {
             console.log("Client disconnected");

@@ -56,31 +56,42 @@ const deleteMessageFromDB = async (id: any) => {
     );
   }
 };
-
-const getReceiverFromDB = async (sender: Types.ObjectId) => {
+const getReceiverFromDB = async (userId: Types.ObjectId) => {
   try {
-    // Find messages where the sender matches the provided sender ID
-    const messages = await MessageModel.find({ sender });
-
-    // Create a Set to collect unique receiver IDs
-    const receiverIds = new Set();
-
-    messages.forEach((message) => {
-      // Add receiver ID to the Set
-      receiverIds.add(message.receiver.toString()); // Ensure receiver is a string
+    // Find messages where the user is either the sender or the receiver
+    const messages = await MessageModel.find({
+      $or: [{ sender: userId }, { receiver: userId }],
     });
 
-    // Convert Set to an array of unique receiver IDs
-    const uniqueReceiverIds = Array.from(receiverIds);
+    // Create a Set to collect unique contact IDs (both senders and receivers)
+    const contactIds = new Set();
 
-    // Populate names for the unique receiver IDs, excluding the password field
-    const receivers = await UserModel.find({
-      _id: { $in: uniqueReceiverIds },
-    }).populate("name", "-password");
+    messages.forEach((message) => {
+      // Add the receiver ID if the user is the sender
+      if (message.sender.toString() === userId.toString()) {
+        contactIds.add(message.receiver.toString());
+      }
+      // Add the sender ID if the user is the receiver
+      if (message.receiver.toString() === userId.toString()) {
+        contactIds.add(message.sender.toString());
+      }
+    });
 
-    return receivers;
+    // Convert Set to an array of unique contact IDs
+    const uniqueContactIds = Array.from(contactIds);
+
+    if (uniqueContactIds.length === 0) {
+      return []; // No contacts found
+    }
+
+    // Find the users corresponding to the contact IDs, excluding the password field
+    const contacts = await UserModel.find({
+      _id: { $in: uniqueContactIds },
+    }).select("-password");
+
+    return contacts;
   } catch (error) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Failed to retrieve receivers");
+    throw new AppError(httpStatus.BAD_REQUEST, "Failed to retrieve contacts");
   }
 };
 
