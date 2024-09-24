@@ -11,7 +11,6 @@ export const initSocket = (server: any) => {
     },
   });
 
-  // Socket.IO event handling
   io.on("connection", (socket) => {
     console.log("New client connected");
 

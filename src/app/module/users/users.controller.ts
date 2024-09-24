@@ -69,7 +69,7 @@ const ActiveUser = catchAsync(async (req, res) => {
 //get all user from DB
 const getAllUser = catchAsync(async (req, res) => {
 
-  const result = await UserService.GetAllUserFromDB();
+  const result = await UserService.GetAllUserFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

@@ -73,7 +73,7 @@ const ActiveUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 }));
 //get all user from DB
 const getAllUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield users_service_1.UserService.GetAllUserFromDB();
+    const result = yield users_service_1.UserService.GetAllUserFromDB(req.query);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,

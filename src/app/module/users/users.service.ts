@@ -3,6 +3,8 @@ import AppError from "../../errors/AppError";
 import UserModel from "./users.model";
 import { JwtPayload } from "jsonwebtoken";
 import { TUser } from "./users.interface";
+import QueryBuilder from "../../builders/QueryBuilder";
+import { userSearchableFields } from "../courses/courses.constant";
 
 //find one user into DB
 
@@ -178,10 +180,19 @@ const ActiveUserIntoDB = async (id: string) => {
 
 //get All USer
 
-const GetAllUserFromDB = async () => {
+const GetAllUserFromDB = async (query: Record<string, unknown>) => {
   try {
+    // Prepare the query object for users
+    const queryObj = { ...query };
+
+    // Use the QueryBuilder to build the user query
+    const userQuery = new QueryBuilder(UserModel.find(), queryObj)
+      .search(userSearchableFields) // Assuming userSearchableFields is defined
+    
+
     // Fetch all users from the database
-    const result = await UserModel.find();
+    const result = await userQuery.modelQuery;
+
     return result;
   } catch (error) {
     // Throw a custom error if something goes wrong

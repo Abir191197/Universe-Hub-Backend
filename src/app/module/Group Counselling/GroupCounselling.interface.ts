@@ -7,12 +7,12 @@ export interface IGroupStudy {
   BookedByEmail?: string[];
   BookedByName?: string[];
   BookedByPhone?: string[];
-  TopicName: string;
+  topic: string;
   Description: string;
   imgSrc?: string;
   selectDate: string;
   MeetLink?: string;
-  TotalEnroll?: number;
+  TotalJoin?: number;
   isCompleted?: boolean;
   createdAt: Date;
   updatedAt: Date;

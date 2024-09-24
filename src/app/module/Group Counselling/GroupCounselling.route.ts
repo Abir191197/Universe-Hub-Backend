@@ -27,13 +27,16 @@ router.delete(
 
 
 router.get(
-  "/:id",
+  "/",
   authVerify(USER_ROLE.admin, USER_ROLE.counsellor, USER_ROLE.student),
   GroupStudyController.getAllGroupStudy
 );
 
-
-
+router.put(
+  "/:id",
+  authVerify(USER_ROLE.admin, USER_ROLE.counsellor, USER_ROLE.student),
+  GroupStudyController.bookedGroupStudy
+);
 
 
 

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const app_1 = __importDefault(require("./app"));
 const config_1 = __importDefault(require("./config"));
+const socket_1 = require("./socket"); // Ensure this path is correct
 let server;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -23,6 +24,8 @@ function main() {
             server = app_1.default.listen(config_1.default.port, () => {
                 console.log(`App is listening on port ${config_1.default.port}`);
             });
+            // Initialize Socket.IO with the HTTP server
+            (0, socket_1.initSocket)(server);
         }
         catch (err) {
             console.error(err);

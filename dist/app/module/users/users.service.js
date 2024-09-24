@@ -16,6 +16,8 @@ exports.UserService = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const users_model_1 = __importDefault(require("./users.model"));
+const QueryBuilder_1 = __importDefault(require("../../builders/QueryBuilder"));
+const courses_constant_1 = require("../courses/courses.constant");
 //find one user into DB
 const findUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -136,10 +138,15 @@ const ActiveUserIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 //get All USer
-const GetAllUserFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+const GetAllUserFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Prepare the query object for users
+        const queryObj = Object.assign({}, query);
+        // Use the QueryBuilder to build the user query
+        const userQuery = new QueryBuilder_1.default(users_model_1.default.find(), queryObj)
+            .search(courses_constant_1.userSearchableFields); // Assuming userSearchableFields is defined
         // Fetch all users from the database
-        const result = yield users_model_1.default.find();
+        const result = yield userQuery.modelQuery;
         return result;
     }
     catch (error) {

@@ -2,6 +2,7 @@ import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
 import config from "./config";
+import { initSocket } from "./socket"; // Ensure this path is correct
 
 let server: Server;
 
@@ -12,6 +13,9 @@ async function main() {
     server = app.listen(config.port, () => {
       console.log(`App is listening on port ${config.port}`);
     });
+
+    // Initialize Socket.IO with the HTTP server
+    initSocket(server);
   } catch (err) {
     console.error(err);
   }

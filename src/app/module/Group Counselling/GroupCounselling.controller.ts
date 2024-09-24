@@ -51,6 +51,22 @@ const getAllGroupStudy = catchAsync(async (req, res) => {
   });
 });
 
+const bookedGroupStudy = catchAsync(async (req, res) => {
+  const payload = {
+    authUserInformation: req.user,
+    EventInformation: req.params,
+  };
+
+  const result = await GroupStudyService.bookedGroupStudyIntoDB(payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Group study booked successfully",
+    data: result,
+  });
+});
+
 
 
 
@@ -61,4 +77,5 @@ export const GroupStudyController = {
   createGroupStudy,
   deleteGroupStudy,
   getAllGroupStudy,
+  bookedGroupStudy,
 };

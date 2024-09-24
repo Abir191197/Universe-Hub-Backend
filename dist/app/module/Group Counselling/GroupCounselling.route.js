@@ -14,5 +14,6 @@ const router = express_1.default.Router();
 //create Counselling
 router.post("/createGroupCounselling", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.counsellor, user_constant_1.USER_ROLE.student), (0, validateRequest_1.default)(GroupCounselling_validation_1.GroupStudyValidation.GroupStudyValidationSchema), GroupCounselling_controller_1.GroupStudyController.createGroupStudy);
 router.delete("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.counsellor, user_constant_1.USER_ROLE.student), GroupCounselling_controller_1.GroupStudyController.deleteGroupStudy);
-router.get("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.counsellor, user_constant_1.USER_ROLE.student), GroupCounselling_controller_1.GroupStudyController.getAllGroupStudy);
+router.get("/", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.counsellor, user_constant_1.USER_ROLE.student), GroupCounselling_controller_1.GroupStudyController.getAllGroupStudy);
+router.put("/:id", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.counsellor, user_constant_1.USER_ROLE.student), GroupCounselling_controller_1.GroupStudyController.bookedGroupStudy);
 exports.GroupCounsellingRoute = router;

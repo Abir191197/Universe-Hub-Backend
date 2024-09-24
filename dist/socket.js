@@ -11,7 +11,6 @@ const initSocket = (server) => {
             credentials: true,
         },
     });
-    // Socket.IO event handling
     io.on("connection", (socket) => {
         console.log("New client connected");
         socket.on("joinRoom", (userId) => {
