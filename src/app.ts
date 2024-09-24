@@ -14,7 +14,11 @@ app.use(cookieParser());
 
 // CORS configuration
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://universe-hub.vercel.app"],
+  origin: [
+    "http://localhost:5173",
+    "https://universe-hub.vercel.app",
+    "https://universe-hub-backend.onrender.com",
+  ],
   credentials: true,
   methods: "GET,POST,PUT,DELETE",
   optionsSuccessStatus: 200,
