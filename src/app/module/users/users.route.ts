@@ -36,7 +36,7 @@ router.put(
 
 router.get(
   "/AllUser",
-  authVerify(USER_ROLE.admin),
+  authVerify(USER_ROLE.admin,USER_ROLE.student),
   userControllers.getAllUser
 );
 

@@ -4,7 +4,6 @@ import express, { Request, Response } from "express";
 import globalErrorHandler from "./app/middlewares/globalErrorhandler";
 import notFound from "./app/middlewares/notFound";
 import router from "./app/routes";
-import { initSocket } from "./socket"; // Import the socket module
 
 const app = express();
 
@@ -18,6 +17,7 @@ const corsOptions = {
     "http://localhost:5173",
     "https://universe-hub.vercel.app",
     "https://universe-hub-backend.onrender.com",
+    "https://universe-hub-frontend.onrender.com",
   ],
   credentials: true,
   methods: "GET,POST,PUT,DELETE",

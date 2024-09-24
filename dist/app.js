@@ -19,6 +19,7 @@ const corsOptions = {
         "http://localhost:5173",
         "https://universe-hub.vercel.app",
         "https://universe-hub-backend.onrender.com",
+        "https://universe-hub-frontend.onrender.com",
     ],
     credentials: true,
     methods: "GET,POST,PUT,DELETE",

@@ -9,6 +9,7 @@ export const initSocket = (server: any) => {
         "http://localhost:5173",
         "https://universe-hub.vercel.app",
         "https://universe-hub-backend.onrender.com",
+        "https://universe-hub-frontend.onrender.com",
       ],
       methods: ["GET", "POST"],
       credentials: true,
