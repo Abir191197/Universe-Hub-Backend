@@ -5,7 +5,11 @@ let io: Server;
 export const initSocket = (server: any) => {
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:5173", "https://universe-hub.vercel.app"],
+      origin: [
+        "http://localhost:5173",
+        "https://universe-hub.vercel.app",
+        "https://universe-hub-backend.onrender.com",
+      ],
       methods: ["GET", "POST"],
       credentials: true,
     },
