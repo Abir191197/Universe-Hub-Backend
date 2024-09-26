@@ -17,30 +17,6 @@ const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const sendImageToCloud_1 = require("../../utils/sendImageToCloud");
 const file_model_1 = __importDefault(require("./file.model"));
-//create File into DATABASE
-// const createFileUploadIntoDB = async (payload: {
-//   authUserInformation: any;
-//   fileInformation: any;
-//   typeInformation: any;
-// }) => {
-//   const { authUserInformation, fileInformation, typeInformation } = payload;
-//   console.log("from here", fileInformation.originalname);
-//    const fileName = fileInformation.originalname;
-//    const path = fileInformation.path;
-//   const {secure_url,resource_type,bytes} =await sendImageToCloud(fileName,path);
-//   const newFile: Partial<IFile> = {
-//     uploadedBy: authUserInformation.name,
-//     //courseId: fileInformation.courseId,
-//     type: typeInformation.type,
-//     fileUrl: secure_url as string,
-//     fileSize: Math.round(bytes / 1024),
-//     fileType: resource_type,
-//   };
-//   const file = new FileModel(newFile);
-//   await file.save();
-//   return file.toObject();
-// };
-// Create File into DATABASE
 const createFileUploadIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { authUserInformation, fileInformation, typeInformation } = payload;
     const fileName = fileInformation.originalname;

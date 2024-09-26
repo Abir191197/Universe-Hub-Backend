@@ -7,6 +7,7 @@ import { PaymentRoutes } from "../module/Payment/payment.route";
 import { UserRoutes } from "../module/users/users.route";
 import { GroupCounsellingRoute } from "../module/Group Counselling/GroupCounselling.route";
 import { MessageRoute } from "../module/Message/message.route";
+import {  ForumRoutes } from "../module/Forum/forum.route";
 
 
 const router = express.Router();
@@ -43,6 +44,10 @@ const moduleRoutes = [
   {
     path: "/Message",
     route: MessageRoute,
+  },
+  {
+    path: "/Forum",
+    route: ForumRoutes,
   },
 ];
 
