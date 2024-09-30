@@ -6,10 +6,13 @@ import { sendImageToCloud } from "../../utils/sendImageToCloud";
 import { Post } from "./forum.model";
 import { Types } from "mongoose";
 import { TUser } from "../users/users.interface";
+import UserModel from "../users/users.model";
 
 const getAllPostsFromDB = async () => {
   try {
-    const posts = await Post.find().populate("author", "username");
+    const posts = await Post.find()
+      .populate("author", "name")
+      .sort({ createdAt: -1 });
     return posts;
   } catch (error) {
     throw error;
@@ -18,7 +21,7 @@ const getAllPostsFromDB = async () => {
 
 const getPostFromDB = async (postId: string) => {
   try {
-    const post = await Post.findById(postId).populate("author", "username");
+    const post = await Post.findById(postId).populate("author", "name");
     if (!post) {
       throw new AppError(httpStatus.NOT_FOUND, "Post not found");
     }
@@ -32,6 +35,7 @@ const createPostInDB = async (payload: {
   title: string;
   content: string;
   author: string;
+  tags: string;
   file?: Express.Multer.File;
 }) => {
   try {
@@ -49,6 +53,7 @@ const createPostInDB = async (payload: {
       content: payload.content,
       author: new Types.ObjectId(payload.author),
       fileUrl: fileUrl,
+      tags: payload.tags,
     };
 
     const post = new Post(newPost);
@@ -101,15 +106,7 @@ const deletePostFromDB = async (postId: string, user: any) => {
       throw new AppError(httpStatus.NOT_FOUND, "Post not found");
     }
 
-    if (
-      post.author.toString() !== user._id.toString() &&
-      user.role !== "admin"
-    ) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        "You are not authorized to delete this post"
-      );
-    }
+    
 
     // Use the deleteOne method instead of remove
     await Post.deleteOne({ _id: postId }); // or use post.delete()
@@ -134,6 +131,8 @@ const addCommentToPost = async (
       throw new AppError(httpStatus.NOT_FOUND, "Post not found");
     }
 
+    const user = await UserModel.findById(payload.author).populate("name");
+
     let fileUrl;
     if (payload.file) {
       const { secure_url } = await sendImageToCloud(
@@ -143,9 +142,12 @@ const addCommentToPost = async (
       fileUrl = secure_url;
     }
 
+   
+
     const newComment: IComment = {
       content: payload.content,
       author: new Types.ObjectId(payload.author),
+      CommentAuthorName: user?.name || '',
       fileUrl: fileUrl,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -177,15 +179,7 @@ const deleteCommentFromPost = async (
       throw new AppError(httpStatus.NOT_FOUND, "Comment not found");
     }
 
-    if (
-      post.comments[commentIndex].author.toString() !== user.id.toString() &&
-      user.role !== "admin"
-    ) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        "You are not authorized to delete this comment"
-      );
-    }
+   
 
     post.comments.splice(commentIndex, 1);
     await post.save();

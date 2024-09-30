@@ -29,6 +29,7 @@ const mongoose_1 = __importStar(require("mongoose"));
 const CommentSchema = new mongoose_1.Schema({
     content: { type: String, required: true },
     author: { type: mongoose_1.Schema.Types.ObjectId, ref: "Users", required: true },
+    CommentAuthorName: { type: String },
     fileUrl: { type: String, required: false },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
@@ -39,6 +40,7 @@ const PostSchema = new mongoose_1.Schema({
     author: { type: mongoose_1.Schema.Types.ObjectId, ref: "Users", required: true },
     comments: [CommentSchema],
     fileUrl: { type: String, required: false },
+    tags: { type: String, required: false },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });

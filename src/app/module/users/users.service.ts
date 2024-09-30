@@ -76,33 +76,35 @@ const updatedUserIntoDB = async (
 
 //updated  role student into DB
 
-const updatedRoleIntoDB = async(
-  id:string
-) => {
+const updatedRoleIntoDB = async (id: string) => {
   try {
-    
+    // Check if the user exists in the database
     const isUserExist = await UserModel.findOne({ _id: id });
 
+    // If the user does not exist, throw a not found error
     if (!isUserExist) {
       throw new AppError(httpStatus.NOT_FOUND, "User not found");
     }
 
-    
-    if (isUserExist.role === "admin")
-    {
-      throw new AppError(httpStatus.BAD_REQUEST, "User already admin role");
+    // If the user is an admin, change their role to student
+    if (isUserExist.role === "admin") {
+      isUserExist.role = "student";
+    } else {
+      // Otherwise, set their role to admin
+      isUserExist.role = "admin";
     }
 
-    
-    isUserExist.role = "admin";
-
+    // Save the updated user document to the database
     await isUserExist.save();
-
-    return isUserExist;
+    // Return the updated user, excluding the password field
+    return UserModel.findById(isUserExist._id).select("-password");
   } catch (error) {
-    throw error;
+    // Log the error details for debugging purposes
+    console.error("Error updating user role:", error);
+    // Rethrow the error to be handled further up the call stack
+    throw new AppError(httpStatus.BAD_REQUEST, "Failed to update user role");
   }
-}
+};
 
 const BanIntoDB = async (id: string) => {
   try {

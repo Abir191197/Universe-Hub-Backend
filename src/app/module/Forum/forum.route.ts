@@ -33,7 +33,7 @@ router.get("/posts/:postId", forumController.getPost);
 router.post(
   "/posts",
   authVerify(USER_ROLE.admin, USER_ROLE.student),
-  upload.single("image"), // Optional: allow image uploads with posts
+  upload.single("file"), // Optional: allow image uploads with posts
   parseJsonMiddleware,
   forumController.createPost // Complete the missing controller function here
 );
@@ -42,7 +42,7 @@ router.post(
 router.put(
   "/posts/:postId",
   authVerify(USER_ROLE.admin, USER_ROLE.student),
-  upload.single("image"), // Optional: allow image uploads with posts
+  upload.single("file"), // Optional: allow image uploads with posts
   parseJsonMiddleware,
   forumController.updatePost
 );
@@ -54,10 +54,11 @@ router.delete(
   forumController.deletePost
 );
 
-// Add a comment to a post
+
 router.post(
   "/posts/:postId/comments",
   authVerify(USER_ROLE.admin, USER_ROLE.student),
+  upload.single("file"),
   parseJsonMiddleware,
   forumController.addComment
 );

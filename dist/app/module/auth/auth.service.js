@@ -75,6 +75,7 @@ const loginUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function*
         name: user.name,
         email: user.email,
         role: user.role,
+        imageLink: user.imageLink,
     };
     const accessToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.access_key, {
         expiresIn: "30d",

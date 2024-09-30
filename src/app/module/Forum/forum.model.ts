@@ -5,6 +5,7 @@ import { IPost } from "./forum.interface";
 const CommentSchema: Schema = new Schema({
   content: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: "Users", required: true },
+  CommentAuthorName: { type: String },
   fileUrl: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
@@ -16,6 +17,7 @@ const PostSchema: Schema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "Users", required: true },
   comments: [CommentSchema],
   fileUrl: { type: String, required: false },
+   tags: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

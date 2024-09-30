@@ -78,8 +78,8 @@ const addComment = catchAsync(async (req, res) => {
   const user = req.user as TUser;
   const payload = {
     content: req.body.content,
-    author: user.id.toString(),
     file: req.file,
+    author: user.id.toString(),
   };
   const result = await forumService.addCommentToPost(postId, payload);
   sendResponse(res, {

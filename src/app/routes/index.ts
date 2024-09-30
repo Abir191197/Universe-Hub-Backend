@@ -46,7 +46,7 @@ const moduleRoutes = [
     route: MessageRoute,
   },
   {
-    path: "/Forum",
+    path: "/forum",
     route: ForumRoutes,
   },
 ];

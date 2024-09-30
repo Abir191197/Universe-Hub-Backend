@@ -27,16 +27,15 @@ router.get("/posts", forum_controller_1.forumController.getAllPosts);
 // Get a single post
 router.get("/posts/:postId", forum_controller_1.forumController.getPost);
 // Create a new post
-router.post("/posts", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), sendImageToCloud_1.upload.single("image"), // Optional: allow image uploads with posts
+router.post("/posts", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), sendImageToCloud_1.upload.single("file"), // Optional: allow image uploads with posts
 parseJsonMiddleware, forum_controller_1.forumController.createPost // Complete the missing controller function here
 );
 // Update a post
-router.put("/posts/:postId", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), sendImageToCloud_1.upload.single("image"), // Optional: allow image uploads with posts
+router.put("/posts/:postId", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), sendImageToCloud_1.upload.single("file"), // Optional: allow image uploads with posts
 parseJsonMiddleware, forum_controller_1.forumController.updatePost);
 // Delete a post
 router.delete("/posts/:postId", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), forum_controller_1.forumController.deletePost);
-// Add a comment to a post
-router.post("/posts/:postId/comments", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), parseJsonMiddleware, forum_controller_1.forumController.addComment);
+router.post("/posts/:postId/comments", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), sendImageToCloud_1.upload.single("file"), parseJsonMiddleware, forum_controller_1.forumController.addComment);
 // Delete a comment
 router.delete("/posts/:postId/comments/:commentId", (0, authVerify_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.student), forum_controller_1.forumController.deleteComment);
 exports.ForumRoutes = router;

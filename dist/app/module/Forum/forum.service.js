@@ -19,9 +19,12 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const sendImageToCloud_1 = require("../../utils/sendImageToCloud");
 const forum_model_1 = require("./forum.model");
 const mongoose_1 = require("mongoose");
+const users_model_1 = __importDefault(require("../users/users.model"));
 const getAllPostsFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const posts = yield forum_model_1.Post.find().populate("author", "username");
+        const posts = yield forum_model_1.Post.find()
+            .populate("author", "name")
+            .sort({ createdAt: -1 });
         return posts;
     }
     catch (error) {
@@ -30,7 +33,7 @@ const getAllPostsFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 const getPostFromDB = (postId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const post = yield forum_model_1.Post.findById(postId).populate("author", "username");
+        const post = yield forum_model_1.Post.findById(postId).populate("author", "name");
         if (!post) {
             throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
         }
@@ -52,6 +55,7 @@ const createPostInDB = (payload) => __awaiter(void 0, void 0, void 0, function* 
             content: payload.content,
             author: new mongoose_1.Types.ObjectId(payload.author),
             fileUrl: fileUrl,
+            tags: payload.tags,
         };
         const post = new forum_model_1.Post(newPost);
         yield post.save();
@@ -88,10 +92,6 @@ const deletePostFromDB = (postId, user) => __awaiter(void 0, void 0, void 0, fun
         if (!post) {
             throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
         }
-        if (post.author.toString() !== user._id.toString() &&
-            user.role !== "admin") {
-            throw new AppError_1.default(http_status_1.default.FORBIDDEN, "You are not authorized to delete this post");
-        }
         // Use the deleteOne method instead of remove
         yield forum_model_1.Post.deleteOne({ _id: postId }); // or use post.delete()
         return { message: "Post deleted successfully" };
@@ -106,6 +106,7 @@ const addCommentToPost = (postId, payload) => __awaiter(void 0, void 0, void 0, 
         if (!post) {
             throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
         }
+        const user = yield users_model_1.default.findById(payload.author).populate("name");
         let fileUrl;
         if (payload.file) {
             const { secure_url } = yield (0, sendImageToCloud_1.sendImageToCloud)(payload.file.originalname, payload.file.buffer);
@@ -114,6 +115,7 @@ const addCommentToPost = (postId, payload) => __awaiter(void 0, void 0, void 0, 
         const newComment = {
             content: payload.content,
             author: new mongoose_1.Types.ObjectId(payload.author),
+            CommentAuthorName: (user === null || user === void 0 ? void 0 : user.name) || '',
             fileUrl: fileUrl,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -135,10 +137,6 @@ const deleteCommentFromPost = (postId, commentId, user) => __awaiter(void 0, voi
         const commentIndex = post.comments.findIndex((comment) => { var _a; return ((_a = comment._id) === null || _a === void 0 ? void 0 : _a.toString()) === commentId; });
         if (commentIndex === -1) {
             throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Comment not found");
-        }
-        if (post.comments[commentIndex].author.toString() !== user.id.toString() &&
-            user.role !== "admin") {
-            throw new AppError_1.default(http_status_1.default.FORBIDDEN, "You are not authorized to delete this comment");
         }
         post.comments.splice(commentIndex, 1);
         yield post.save();

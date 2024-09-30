@@ -65,10 +65,11 @@ const loginUserFromDB = async (payload: TLoginUser) => {
 
   // Creating a JWT token upon successful login
   const jwtPayload: JwtPayload = {
-    id:user._id,
+    id: user._id,
     name: user.name,
     email: user.email,
     role: user.role,
+    imageLink: user.imageLink,
   };
 
   const accessToken = jwt.sign(jwtPayload, config.access_key as string, {

@@ -69,19 +69,30 @@ const updatedUserIntoDB = (payload, updateData) => __awaiter(void 0, void 0, voi
 //updated  role student into DB
 const updatedRoleIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Check if the user exists in the database
         const isUserExist = yield users_model_1.default.findOne({ _id: id });
+        // If the user does not exist, throw a not found error
         if (!isUserExist) {
             throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
         }
+        // If the user is an admin, change their role to student
         if (isUserExist.role === "admin") {
-            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User already admin role");
+            isUserExist.role = "student";
         }
-        isUserExist.role = "admin";
+        else {
+            // Otherwise, set their role to admin
+            isUserExist.role = "admin";
+        }
+        // Save the updated user document to the database
         yield isUserExist.save();
-        return isUserExist;
+        // Return the updated user, excluding the password field
+        return users_model_1.default.findById(isUserExist._id).select("-password");
     }
     catch (error) {
-        throw error;
+        // Log the error details for debugging purposes
+        console.error("Error updating user role:", error);
+        // Rethrow the error to be handled further up the call stack
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to update user role");
     }
 });
 const BanIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {

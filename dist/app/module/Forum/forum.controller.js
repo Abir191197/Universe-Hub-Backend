@@ -80,8 +80,8 @@ const addComment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     const user = req.user;
     const payload = {
         content: req.body.content,
-        author: user.id.toString(),
         file: req.file,
+        author: user.id.toString(),
     };
     const result = yield forum_service_1.forumService.addCommentToPost(postId, payload);
     (0, sendResponse_1.default)(res, {
