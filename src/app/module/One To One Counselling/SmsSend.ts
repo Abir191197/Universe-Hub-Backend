@@ -30,7 +30,11 @@ Your booking has been confirmed!
 Counsellor: ${messageData.CounsellorName || "N/A"}
 Meet Link: ${messageData.MeetLink || "N/A"}
 Room Number: ${messageData.RoomNumber || "N/A"}
-Date: ${formatDate(messageData.selectDate)}`;
+Date: ${formatDate(messageData.selectDate)}
+Best regards,
+UniverseHub
+
+`;
   // Include formatted date
 
   try {
